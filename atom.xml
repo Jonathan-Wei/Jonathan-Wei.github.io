@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://yoursite.com/"/>
-  <updated>2017-06-01T07:12:26.000Z</updated>
+  <updated>2017-06-02T08:27:43.000Z</updated>
   <id>http://yoursite.com/</id>
   
   <author>
@@ -14,6 +14,221 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>Apache Beam:便携式并行数据处理</title>
+    <link href="http://yoursite.com/2017/06/02/apache-beam-protable-and-parallel-data-processing/"/>
+    <id>http://yoursite.com/2017/06/02/apache-beam-protable-and-parallel-data-processing/</id>
+    <published>2017-06-02T08:24:47.000Z</published>
+    <updated>2017-06-02T08:27:43.000Z</updated>
+    
+    <content type="html"><![CDATA[<h2 id="Apache-Beam-Portable-and-Parallel-Data-Processing"><a href="#Apache-Beam-Portable-and-Parallel-Data-Processing" class="headerlink" title="Apache Beam: Portable and Parallel Data Processing"></a>Apache Beam: Portable and Parallel Data Processing</h2><iframe width="560" height="315" src="https://www.youtube.com/embed/owTuuVt6Oro" frameborder="0" allowfullscreen></iframe>
+
+<h2 id="概念说明"><a href="#概念说明" class="headerlink" title="概念说明"></a>概念说明</h2><p>在我们做数据流处理的过程中，经常会遇到的一个问题：网络延迟。当然对于无序的数据流来说，网络延迟所带来的数据乱序对结果是不会有太大影响的。但是对于数据顺序有要求的应用，则会导致数据不一致等棘手的问题。<br><a id="more"></a><br>官方给出的一个例子中，包含两个维度：</p>
+<ul>
+<li>事件事件(Event Time):  事件发生时间</li>
+<li>处理事件(Processing Time):事件处理时间<br><img src="/images/beam-processingTime-eventTime.png" alt="img"><br>上图中，横轴代表事件发生时间，纵轴代表事件处理事件。在做数据处理的时候，我们往往所理想的情况是数据一出来就被处理完成，图中虚线则代表了这种理想情况。<br>注：离虚线越近的事件延迟低(图中突出的3事件)，反之则延迟高(图中突出的9事件)</li>
+</ul>
+<h2 id="Beam模型围绕的四个关键问题"><a href="#Beam模型围绕的四个关键问题" class="headerlink" title="Beam模型围绕的四个关键问题"></a>Beam模型围绕的四个关键问题</h2><h3 id="计算的结果是什么？（What-results-are-calculated-）"><a href="#计算的结果是什么？（What-results-are-calculated-）" class="headerlink" title="计算的结果是什么？（What results are calculated?）"></a>计算的结果是什么？（What results are calculated?）</h3><p>例如，Sum、Join或是机器学习中训练学习模型等。在Beam SDK中由Pipeline中的操作符指定。<br>下图展示一个sum示例，累计12:00-12:10分的数字累加。<br><img src="/images/beam-what.jpg" alt="img"><br>对应Beam代码如下：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">PCollection&lt;KV&lt;String,Integer&gt;&gt; scores = input</div><div class="line">    .apply(Sum.integersPerKey());</div></pre></td></tr></table></figure></p>
+<p>通过input.apply()方法，通过beam提供的transforms的Sum进行数据统计<br><img src="/images/what-is-being-computed.png" alt="img"></p>
+<h3 id="数据在什么范围中计算？-Where-in-event-time-are-result-calculated"><a href="#数据在什么范围中计算？-Where-in-event-time-are-result-calculated" class="headerlink" title="数据在什么范围中计算？(Where in event time are result calculated?)"></a>数据在什么范围中计算？(Where in event time are result calculated?)</h3><p>例如，基于Process-Time的时间窗口，基于Event-Time的时间窗口、滑动窗口等。在BeamSDK中由Pipeline中的窗口指定<br>假如我们现在想在事件时间横轴上统计每个2分钟时间窗口的整数累加值，即完成如下图动画所示的效果<br><img src="/images/beam-where.jpg" alt="img"><br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">PCollection&lt;KV&lt;String,Integer&gt;&gt; scores = input</div><div class="line">    .apply(Window.into(FixedWindows.of(Duration.standardMinutes(2))))</div><div class="line">    .apply(Sum.integersPerKey());</div></pre></td></tr></table></figure></p>
+<p>Beam 自动为每个时间窗口创建一个小的批处理作业，在处理时间纵轴 12:10 的时候触发计算。但是这样，我们只能等到最后的一个时间点（12:10）才能得到计算结果。</p>
+<p>所支持的窗口列表如下：<br><img src="/images/where-in-event-time.png" alt="img"></p>
+<h3 id="何时将结果数据落地？-When-in-processing-time-are-results-materialized"><a href="#何时将结果数据落地？-When-in-processing-time-are-results-materialized" class="headerlink" title="何时将结果数据落地？(When in processing time are results materialized?)"></a>何时将结果数据落地？(When in processing time are results materialized?)</h3><p>例如，在1小时的Event-Time时间窗口中，每隔2分钟，将当前窗口计算结果输出。</p>
+<p>在上个问题中，我们以2分钟为间隔，输出每2分钟的统计结果。但是如果用户想提前将结果写入统计结果，那么我们就要对代码做一定的修改。<br><img src="/images/beam-when.jpg" alt="img"><br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">PCollection&lt;KV&lt;String,Integer&gt;&gt; scores = input</div><div class="line">    .apply(Window.into(FixedWindows.of(Duration.standardMinutes(2)))</div><div class="line">            .triggering(AtWatermark()))            </div><div class="line">    .apply(Sum.integersPerKey());</div></pre></td></tr></table></figure></p>
+<p>此处引入了触发器(Trigger)以及水平线(Watermark)，触发器(Trigger)决定何时将计算结果发射出去，发射太早会丢失一部分数据，丧失精确性，发射太晚会导致延迟变长，而且会囤积大量数据，何时触发器(Trigger)是由水位线(Watermark)来决定的，在Beam SDK中由Pipeline中的水位线和触发器指定</p>
+<p>所支持的触发器(Trigger)列表如下：<br><img src="/images/when-in-processing-time.png" alt="img"></p>
+<h3 id="如何对结果进行改进修正？-How-do-refinements-of-results-relate"><a href="#如何对结果进行改进修正？-How-do-refinements-of-results-relate" class="headerlink" title="如何对结果进行改进修正？(How do refinements of results relate?)"></a>如何对结果进行改进修正？(How do refinements of results relate?)</h3><p>例如，将迟到数据计算增量结果输出，或是将迟到数据计算结果和窗口内数据计算结果合并成全量结果输出。在Beam SDK中由Accumulation指定</p>
+<p>从上个问题的动图中可以看出，虽然我们解决了提前写入事件窗口的统计结果提前写入的问题，但是从动图上可以看出，结果统计遗漏了9这个事件，接下来这步我们就要解决这个问题。<br><img src="/images/beam-how.jpg" alt="img"><br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">PCollection&lt;KV&lt;String,Integer&gt;&gt; scores = input</div><div class="line">    .apply(Window.into(FixedWindows.of(Duration.standardMinutes(2)))</div><div class="line">           .triggering(AtWatermark()</div><div class="line">              .withEarlyFirings(AtPeriod(Duration.standardMinutes(1)))</div><div class="line">              .withLateFirings(AtCount(1)))</div><div class="line">           .accumulatingFiredPanes())            </div><div class="line">    .apply(Sum.integersPerKey());</div></pre></td></tr></table></figure></p>
+<p>所支持的改进修正功能列表如下：<br><img src="/images/How-do-refinements-relate.png" alt="img"></p>
+<p>参考连接：<br><a href="https://beam.apache.org/documentation/runners/capability-matrix/#cap-summary-what" target="_blank" rel="external">https://beam.apache.org/documentation/runners/capability-matrix/#cap-summary-what</a><br><a href="http://www.jianshu.com/p/357bf071d017" target="_blank" rel="external">http://www.jianshu.com/p/357bf071d017</a></p>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;h2 id=&quot;Apache-Beam-Portable-and-Parallel-Data-Processing&quot;&gt;&lt;a href=&quot;#Apache-Beam-Portable-and-Parallel-Data-Processing&quot; class=&quot;headerlink&quot; title=&quot;Apache Beam: Portable and Parallel Data Processing&quot;&gt;&lt;/a&gt;Apache Beam: Portable and Parallel Data Processing&lt;/h2&gt;&lt;iframe width=&quot;560&quot; height=&quot;315&quot; src=&quot;https://www.youtube.com/embed/owTuuVt6Oro&quot; frameborder=&quot;0&quot; allowfullscreen&gt;&lt;/iframe&gt;
+
+&lt;h2 id=&quot;概念说明&quot;&gt;&lt;a href=&quot;#概念说明&quot; class=&quot;headerlink&quot; title=&quot;概念说明&quot;&gt;&lt;/a&gt;概念说明&lt;/h2&gt;&lt;p&gt;在我们做数据流处理的过程中，经常会遇到的一个问题：网络延迟。当然对于无序的数据流来说，网络延迟所带来的数据乱序对结果是不会有太大影响的。但是对于数据顺序有要求的应用，则会导致数据不一致等棘手的问题。&lt;br&gt;
+    
+    </summary>
+    
+      <category term="apache beam" scheme="http://yoursite.com/categories/apache-beam/"/>
+    
+    
+      <category term="apache beam" scheme="http://yoursite.com/tags/apache-beam/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>Apache Beam 介绍</title>
+    <link href="http://yoursite.com/2017/06/02/apache-beam-introduce/"/>
+    <id>http://yoursite.com/2017/06/02/apache-beam-introduce/</id>
+    <published>2017-06-02T08:23:12.000Z</published>
+    <updated>2017-06-02T08:27:49.000Z</updated>
+    
+    <content type="html"><![CDATA[<h2 id="背景介绍"><a href="#背景介绍" class="headerlink" title="背景介绍"></a>背景介绍</h2><p>作为一名大数据开发者，不得不说自从hadoop问世之后，接连而来的各种各样的大数据处理框架层出不穷，而我们则要不断的去学习，运用不同的技术、框架、api，甚至是开发语言以及sdk，去开发项目功能，解决项目问题。</p>
+<ul>
+<li>平台迁移问题：根据项目的需求，技术的更新迭代，项目性能的要求等等，同样的业务要在不同的框架上运行，可能你就要花费很长一段时间去学习新的框架，新的api。</li>
+<li>开发工具难抉择：近两年开启的开源大潮，为大数据开发者提供了十分富余的工具。但这同时也增加了开发者选择合适的工具的难度，尤其对于新入行的开发者来说。这很可能拖慢、甚至阻碍开源工具的发展<a id="more"></a>
+Apache Beam（原名Google DataFlow）是Google在2016年2月份贡献给Apache基金会的Apache孵化项目，被认为是继MapReduce，GFS和BigQuery等之后，Google在大数据处理领域对开源社区的又一个非常大的贡献。Apache Beam的主要目标是统一批处理和流处理的编程范式，为无限，乱序，web-scale的数据集处理提供简单灵活，功能丰富以及表达能力十分强大的SDK。<br>Apache Beam项目重点在于数据处理的编程范式和接口定义，并不涉及具体执行引擎的实现。<br>Apache Beam希望基于Beam开发的数据处理程序可以执行在任意的分布式计算引擎上<br><img src="/images/bigdata.png" alt="img"></li>
+</ul>
+<h2 id="特性"><a href="#特性" class="headerlink" title="特性"></a>特性</h2><ul>
+<li>统一(Unified)：<br> 对于批处理和流式处理，使用单一的编程模型，能够实现批处理（Batch processing）、流处理（Streaming Processing），通常的做法是把待处理的数据集（Dataset）统一，一般会把有界（Bound）数据集作为无界（Unbound）数据集的一种特殊情况来看待，比如Apache Flink便是按照这种方式处理，在差异化的API层之上构建一个统一的API层。</li>
+<li>可移植(Portable)：<br> 在多个不同的计算环境下，都能够执行已经定义好的数据处理Pipeline。也就是说，对数据集处理的定义（即构建的Data Pipeline），与最终所要Deploy的执行环境完全无关。这对实现数据处理的企业是非常友好的，当下数据处理新技术不断涌现，企业数据处理平台也为了能够与时俱进并提高处理效率，当然希望在底层计算平台升级的过程中无需重写上层已定义的Data Pipeline。<br> 目前，Apache Beam项目开发整体来看还处在初期，初步决定底层执行环境支持主流的计算平台：<br> Apache Apex、Apache Flink、Apache Spark、Google Cloud Dataflow。实际上，Apache Beam的这种统一编程模型，可以支持任意的计算引擎，通过Data Pipeline层与执行引擎层之间开发一个类似Driver的连接器即可实现。</li>
+<li>可拓展(Extensible)：可以实现和分享更多的新SDK、IO连接器、转换操作库等；</li>
+</ul>
+<!-- more -->
+<h2 id="核心概念"><a href="#核心概念" class="headerlink" title="核心概念"></a>核心概念</h2><h3 id="Pipeline"><a href="#Pipeline" class="headerlink" title="Pipeline"></a>Pipeline</h3><p>管道，包装数据处理流程任务</p>
+<h3 id="PCollection"><a href="#PCollection" class="headerlink" title="PCollection"></a>PCollection</h3><p>分布式数据集，PCollection是管道中每个步骤的输入、输出</p>
+<h3 id="Transforms"><a href="#Transforms" class="headerlink" title="Transforms"></a>Transforms</h3><p>管道中的每个步骤，它接收一个或者若干个输入PCollection，进行处理后，输出PCollection</p>
+<h3 id="I-O-sources-and-sinks"><a href="#I-O-sources-and-sinks" class="headerlink" title="I/O sources and sinks"></a>I/O sources and sinks</h3><p>source和sink用于提供数据的输入和输出端点<br>目前支持如下：</p>
+<h4 id="内嵌-I-O-转换"><a href="#内嵌-I-O-转换" class="headerlink" title="内嵌 I/O 转换"></a>内嵌 I/O 转换</h4><table>
+<thead>
+<tr>
+<th>Language</th>
+<th>File-based</th>
+<th>Messaging</th>
+<th>Database</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Java</td>
+<td>AvroIO<br>Apache Hadoop File System<br>TextIO<br>XML</td>
+<td>JMS<br>Apache Kafka<br>Amazon Kinesis<br>Google Cloud PubSub</td>
+<td>Apache Hadoop InputFormat<br>Apache HBase<br>MongoDB<br>JDBC<br>Google BigQuery<br>Google Cloud Bigtable<br>Google Cloud Datastore</td>
+</tr>
+<tr>
+<td>Python</td>
+<td>avroio<br>textio</td>
+<td></td>
+<td>Google BigQuery<br>Google Cloud Datastore</td>
+</tr>
+</tbody>
+</table>
+<h4 id="拓展-I-O-转换"><a href="#拓展-I-O-转换" class="headerlink" title="拓展 I/O 转换"></a>拓展 I/O 转换</h4><table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Language</th>
+<th>JIRA</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>AMQP</td>
+<td>Java</td>
+<td><a href="https://issues.apache.org/jira/browse/BEAM-1237" target="_blank" rel="external">BEAM-1237</a></td>
+</tr>
+<tr>
+<td>Apache Cassandra</td>
+<td>Java</td>
+<td><a href="https://issues.apache.org/jira/browse/BEAM-245" target="_blank" rel="external">BEAM-245</a></td>
+</tr>
+<tr>
+<td>Apache DistributedLog</td>
+<td>Java</td>
+<td><a href="https://issues.apache.org/jira/browse/BEAM-607" target="_blank" rel="external">BEAM-607</a></td>
+</tr>
+<tr>
+<td>Apache Hive</td>
+<td>Java</td>
+<td><a href="https://issues.apache.org/jira/browse/BEAM-1158" target="_blank" rel="external">BEAM-1158</a></td>
+</tr>
+<tr>
+<td>Apache Parquet</td>
+<td>Java</td>
+<td><a href="https://issues.apache.org/jira/browse/BEAM-214" target="_blank" rel="external">BEAM-214</a></td>
+</tr>
+<tr>
+<td>Apache Solr</td>
+<td>Java</td>
+<td><a href="https://issues.apache.org/jira/browse/BEAM-1236" target="_blank" rel="external">BEAM-1236</a></td>
+</tr>
+<tr>
+<td>Apache Sqoop</td>
+<td>Java</td>
+<td><a href="https://issues.apache.org/jira/browse/BEAM-67" target="_blank" rel="external">BEAM-67</a></td>
+</tr>
+<tr>
+<td>Couchbase</td>
+<td>Java</td>
+<td><a href="https://issues.apache.org/jira/browse/BEAM-1893" target="_blank" rel="external">BEAM-1893</a></td>
+</tr>
+<tr>
+<td>JSON</td>
+<td>Java</td>
+<td><a href="https://issues.apache.org/jira/browse/BEAM-1581" target="_blank" rel="external">BEAM-1581</a></td>
+</tr>
+<tr>
+<td>Memcached</td>
+<td>Java</td>
+<td><a href="https://issues.apache.org/jira/browse/BEAM-1678" target="_blank" rel="external">BEAM-1678</a></td>
+</tr>
+<tr>
+<td>Neo4j</td>
+<td>Java</td>
+<td><a href="https://issues.apache.org/jira/browse/BEAM-1857" target="_blank" rel="external">BEAM-1857</a></td>
+</tr>
+<tr>
+<td>Redis</td>
+<td>Java</td>
+<td><a href="https://issues.apache.org/jira/browse/BEAM-1017" target="_blank" rel="external">BEAM-1017</a></td>
+</tr>
+<tr>
+<td>RabbitMQ</td>
+<td>Java</td>
+<td><a href="https://issues.apache.org/jira/browse/BEAM-1240" target="_blank" rel="external">BEAM-1240</a></td>
+</tr>
+<tr>
+<td>RestIO</td>
+<td>Java</td>
+<td><a href="https://issues.apache.org/jira/browse/BEAM-1946" target="_blank" rel="external">BEAM-1946</a></td>
+</tr>
+<tr>
+<td>TikaIO</td>
+<td>Java</td>
+<td><a href="https://issues.apache.org/jira/browse/BEAM-2328" target="_blank" rel="external">BEAM-2328</a></td>
+</tr>
+<tr>
+<td>Cloud Spanner</td>
+<td>Java</td>
+<td><a href="https://issues.apache.org/jira/browse/BEAM-1542" target="_blank" rel="external">BEAM-1542</a></td>
+</tr>
+</tbody>
+</table>
+<h2 id="基本架构"><a href="#基本架构" class="headerlink" title="基本架构"></a>基本架构</h2><h3 id="架构图"><a href="#架构图" class="headerlink" title="架构图"></a>架构图</h3><p><img src="/images/apache-beam-framework.png" alt="img"><br>通过上图，我们可以清楚的知道，执行一个流程分以下步骤：</p>
+<ul>
+<li>End Users：选择一种你熟悉的编程语言提交应用</li>
+<li>SDK Writers：该编程语言必须是 Beam 模型支持的</li>
+<li>Library Writers：转换成Beam模型的格式</li>
+<li>Runner Writers：在分布式环境下处理并支持Beam的数据处理管道</li>
+<li>IO Providers：在Beam的数据处理管道上运行所有的应用</li>
+<li>DSL Writers：创建一个高阶的数据处理管道<h3 id="Beam核心组成部分"><a href="#Beam核心组成部分" class="headerlink" title="Beam核心组成部分"></a>Beam核心组成部分</h3></li>
+<li>Beam SDK<br> Beam SDK提供一个统一的编程接口给到上层应用的开发者，开发者不需要了解底层的具体的大数据平台的开发接口是什么，直接通过Beam SDK的接口，就可以开发数据处理的加工流程，不管输入是用于批处理的有限数据集，还是流式的无限数据集。对于有限或无限的输入数据，Beam SDK都使用相同的类来表现，并且使用相同的转换操作进行处理。Beam SDK可以有不同编程语言的实现，目前已经完整地提供了Java，python的SDK还在开发过程中，相信未来会有更多不同的语言的SDK会发布出来。</li>
+<li>Beam Pipeline Runner<br> Beam Pipeline Runner将用户用Beam模型定义开发的处理流程翻译成底层的分布式数据处理平台支持的运行时环境。在运行Beam程序时，需要指明底层的正确Runner类型。针对不同的大数据平台，会有不同的Runner。目前Flink、Spark、Apex以及谷歌的Cloud DataFlow都有支持Beam的Runner。</li>
+</ul>
+<h3 id="语言-Language"><a href="#语言-Language" class="headerlink" title="语言(Language)"></a>语言(Language)</h3><p><img src="/images/beam_architecture.png" alt="img"></p>
+<h3 id="运行器-Runner"><a href="#运行器-Runner" class="headerlink" title="运行器(Runner)"></a>运行器(Runner)</h3><p><img src="/images/beam-workers.jpg" alt="img"></p>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>Apache Beam的Beam Model对无限乱序数据流的数据处理进行了非常优雅的抽象，“WWWH”四个维度对数据处理的描述，非常清晰与合理，Beam Model在统一了对无限数据流和有限数据集的处理模式的同时，也明确了对无限数据流的数据处理方式的编程范式，扩大了流处理系统可应用的业务范围，例如，Event-Time/Session窗口的支持，乱序数据的处理支持等。Apache Flink，Apache Spark Streaming等项目的API设计均越来越多的借鉴或参考了Apache Beam Model，且作为Beam Runner的实现，与Beam SDK的兼容度也越来越高。<br>目前apache beam的开发处于初步阶段，对python的支持还在开发中，对java的支持的内容相对比较丰富，支持的runner也会逐步增加，实现平台迁移的可移植，降低／解决大数据开发者框架选择的问题。</p>
+<p>参考链接：<br><a href="https://www.infoq.com/presentations/apache-beam" target="_blank" rel="external">https://www.infoq.com/presentations/apache-beam</a><br><a href="https://beam.apache.org/documentation/io/built-in/" target="_blank" rel="external">https://beam.apache.org/documentation/io/built-in/</a><br><a href="http://www.cnblogs.com/smartloli/p/6685106.html" target="_blank" rel="external">http://www.cnblogs.com/smartloli/p/6685106.html</a></p>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;h2 id=&quot;背景介绍&quot;&gt;&lt;a href=&quot;#背景介绍&quot; class=&quot;headerlink&quot; title=&quot;背景介绍&quot;&gt;&lt;/a&gt;背景介绍&lt;/h2&gt;&lt;p&gt;作为一名大数据开发者，不得不说自从hadoop问世之后，接连而来的各种各样的大数据处理框架层出不穷，而我们则要不断的去学习，运用不同的技术、框架、api，甚至是开发语言以及sdk，去开发项目功能，解决项目问题。&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;平台迁移问题：根据项目的需求，技术的更新迭代，项目性能的要求等等，同样的业务要在不同的框架上运行，可能你就要花费很长一段时间去学习新的框架，新的api。&lt;/li&gt;
+&lt;li&gt;开发工具难抉择：近两年开启的开源大潮，为大数据开发者提供了十分富余的工具。但这同时也增加了开发者选择合适的工具的难度，尤其对于新入行的开发者来说。这很可能拖慢、甚至阻碍开源工具的发展
+    
+    </summary>
+    
+      <category term="apache beam" scheme="http://yoursite.com/categories/apache-beam/"/>
+    
+    
+      <category term="apache beam" scheme="http://yoursite.com/tags/apache-beam/"/>
+    
+  </entry>
   
   <entry>
     <title>常用工具库</title>
@@ -44,39 +259,6 @@
       <category term="maven" scheme="http://yoursite.com/tags/maven/"/>
     
       <category term="jsoup" scheme="http://yoursite.com/tags/jsoup/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>Hello World</title>
-    <link href="http://yoursite.com/2017/05/20/hello-world/"/>
-    <id>http://yoursite.com/2017/05/20/hello-world/</id>
-    <published>2017-05-19T19:34:05.000Z</published>
-    <updated>2017-05-20T09:55:01.000Z</updated>
-    
-    <content type="html"><![CDATA[<p>Welcome to <a href="https://hexo.io/" target="_blank" rel="external">Hexo</a>! This is your very first post. Check <a href="https://hexo.io/docs/" target="_blank" rel="external">documentation</a> for more info. If you get any problems when using Hexo, you can find the answer in <a href="https://hexo.io/docs/troubleshooting.html" target="_blank" rel="external">troubleshooting</a> or you can ask me on <a href="https://github.com/hexojs/hexo/issues" target="_blank" rel="external">GitHub</a>.</p>
-<h2 id="Quick-Start"><a href="#Quick-Start" class="headerlink" title="Quick Start"></a>Quick Start</h2><h3 id="Create-a-new-post"><a href="#Create-a-new-post" class="headerlink" title="Create a new post"></a>Create a new post</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ hexo new <span class="string">"My New Post"</span></div></pre></td></tr></table></figure>
-<p>More info: <a href="https://hexo.io/docs/writing.html" target="_blank" rel="external">Writing</a><br><a id="more"></a></p>
-<h3 id="Run-server"><a href="#Run-server" class="headerlink" title="Run server"></a>Run server</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ hexo server</div></pre></td></tr></table></figure>
-<p>More info: <a href="https://hexo.io/docs/server.html" target="_blank" rel="external">Server</a></p>
-<h3 id="Generate-static-files"><a href="#Generate-static-files" class="headerlink" title="Generate static files"></a>Generate static files</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ hexo generate</div></pre></td></tr></table></figure>
-<p>More info: <a href="https://hexo.io/docs/generating.html" target="_blank" rel="external">Generating</a></p>
-<h3 id="Deploy-to-remote-sites"><a href="#Deploy-to-remote-sites" class="headerlink" title="Deploy to remote sites"></a>Deploy to remote sites</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ hexo deploy</div></pre></td></tr></table></figure>
-<p>More info: <a href="https://hexo.io/docs/deployment.html" target="_blank" rel="external">Deployment</a></p>
-]]></content>
-    
-    <summary type="html">
-    
-      &lt;p&gt;Welcome to &lt;a href=&quot;https://hexo.io/&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;Hexo&lt;/a&gt;! This is your very first post. Check &lt;a href=&quot;https://hexo.io/docs/&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;documentation&lt;/a&gt; for more info. If you get any problems when using Hexo, you can find the answer in &lt;a href=&quot;https://hexo.io/docs/troubleshooting.html&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;troubleshooting&lt;/a&gt; or you can ask me on &lt;a href=&quot;https://github.com/hexojs/hexo/issues&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;GitHub&lt;/a&gt;.&lt;/p&gt;
-&lt;h2 id=&quot;Quick-Start&quot;&gt;&lt;a href=&quot;#Quick-Start&quot; class=&quot;headerlink&quot; title=&quot;Quick Start&quot;&gt;&lt;/a&gt;Quick Start&lt;/h2&gt;&lt;h3 id=&quot;Create-a-new-post&quot;&gt;&lt;a href=&quot;#Create-a-new-post&quot; class=&quot;headerlink&quot; title=&quot;Create a new post&quot;&gt;&lt;/a&gt;Create a new post&lt;/h3&gt;&lt;figure class=&quot;highlight bash&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;div class=&quot;line&quot;&gt;1&lt;/div&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;div class=&quot;line&quot;&gt;$ hexo new &lt;span class=&quot;string&quot;&gt;&quot;My New Post&quot;&lt;/span&gt;&lt;/div&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
-&lt;p&gt;More info: &lt;a href=&quot;https://hexo.io/docs/writing.html&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;Writing&lt;/a&gt;&lt;br&gt;
-    
-    </summary>
-    
-      <category term="Testing" scheme="http://yoursite.com/categories/Testing/"/>
-    
-    
-      <category term="Hello" scheme="http://yoursite.com/tags/Hello/"/>
     
   </entry>
   

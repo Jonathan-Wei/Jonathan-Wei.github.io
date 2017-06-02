@@ -78,7 +78,7 @@
 <link href="/css/main.css?v=5.1.1" rel="stylesheet" type="text/css" />
 
 
-  <meta name="keywords" content="Hello," />
+  <meta name="keywords" content="apache beam," />
 
 
 
@@ -96,17 +96,22 @@
 
 
 
-<meta name="description" content="Welcome to Hexo! This is your very first post. Check documentation for more info. If you get any problems when using Hexo, you can find the answer in troubleshooting or you can ask me on GitHub. Quick">
-<meta name="keywords" content="Hello">
+<meta name="description" content="背景介绍作为一名大数据开发者，不得不说自从hadoop问世之后，接连而来的各种各样的大数据处理框架层出不穷，而我们则要不断的去学习，运用不同的技术、框架、api，甚至是开发语言以及sdk，去开发项目功能，解决项目问题。  平台迁移问题：根据项目的需求，技术的更新迭代，项目性能的要求等等，同样的业务要在不同的框架上运行，可能你就要花费很长一段时间去学习新的框架，新的api。 开发工具难抉择：近两年开">
+<meta name="keywords" content="apache beam">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Hello World">
-<meta property="og:url" content="http://yoursite.com/2017/05/20/hello-world/index.html">
+<meta property="og:title" content="Apache Beam 介绍">
+<meta property="og:url" content="http://yoursite.com/2017/06/02/apache-beam-introduce/index.html">
 <meta property="og:site_name" content="Jonathan.Wei&#39;s Notes">
-<meta property="og:description" content="Welcome to Hexo! This is your very first post. Check documentation for more info. If you get any problems when using Hexo, you can find the answer in troubleshooting or you can ask me on GitHub. Quick">
-<meta property="og:updated_time" content="2017-05-20T09:55:01.000Z">
+<meta property="og:description" content="背景介绍作为一名大数据开发者，不得不说自从hadoop问世之后，接连而来的各种各样的大数据处理框架层出不穷，而我们则要不断的去学习，运用不同的技术、框架、api，甚至是开发语言以及sdk，去开发项目功能，解决项目问题。  平台迁移问题：根据项目的需求，技术的更新迭代，项目性能的要求等等，同样的业务要在不同的框架上运行，可能你就要花费很长一段时间去学习新的框架，新的api。 开发工具难抉择：近两年开">
+<meta property="og:image" content="http://yoursite.com/images/bigdata.png">
+<meta property="og:image" content="http://yoursite.com/images/apache-beam-framework.png">
+<meta property="og:image" content="http://yoursite.com/images/beam_architecture.png">
+<meta property="og:image" content="http://yoursite.com/images/beam-workers.jpg">
+<meta property="og:updated_time" content="2017-06-02T08:27:49.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Hello World">
-<meta name="twitter:description" content="Welcome to Hexo! This is your very first post. Check documentation for more info. If you get any problems when using Hexo, you can find the answer in troubleshooting or you can ask me on GitHub. Quick">
+<meta name="twitter:title" content="Apache Beam 介绍">
+<meta name="twitter:description" content="背景介绍作为一名大数据开发者，不得不说自从hadoop问世之后，接连而来的各种各样的大数据处理框架层出不穷，而我们则要不断的去学习，运用不同的技术、框架、api，甚至是开发语言以及sdk，去开发项目功能，解决项目问题。  平台迁移问题：根据项目的需求，技术的更新迭代，项目性能的要求等等，同样的业务要在不同的框架上运行，可能你就要花费很长一段时间去学习新的框架，新的api。 开发工具难抉择：近两年开">
+<meta name="twitter:image" content="http://yoursite.com/images/bigdata.png">
 
 
 
@@ -134,13 +139,13 @@
 
 
 
-  <link rel="canonical" href="http://yoursite.com/2017/05/20/hello-world/"/>
+  <link rel="canonical" href="http://yoursite.com/2017/06/02/apache-beam-introduce/"/>
 
 
 
 
 
-  <title>Hello World | Jonathan.Wei's Notes</title>
+  <title>Apache Beam 介绍 | Jonathan.Wei's Notes</title>
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
@@ -290,7 +295,7 @@
   
 
   <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/05/20/hello-world/">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/06/02/apache-beam-introduce/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="Jonathan.Wei">
@@ -307,7 +312,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">Hello World</h1>
+          <h1 class="post-title" itemprop="name headline">Apache Beam 介绍</h1>
         
 
         <div class="post-meta">
@@ -319,8 +324,8 @@
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-05-20T03:34:05+08:00">
-                2017-05-20
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-06-02T16:23:12+08:00">
+                2017-06-02
               </time>
             
 
@@ -342,8 +347,8 @@
               
               
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Testing/" itemprop="url" rel="index">
-                    <span itemprop="name">Testing</span>
+                  <a href="/categories/apache-beam/" itemprop="url" rel="index">
+                    <span itemprop="name">apache beam</span>
                   </a>
                 </span>
 
@@ -360,9 +365,9 @@
                 <span class="post-meta-item-icon">
                   <i class="fa fa-comment-o"></i>
                 </span>
-                <a href="/2017/05/20/hello-world/#comments" itemprop="discussionUrl">
+                <a href="/2017/06/02/apache-beam-introduce/#comments" itemprop="discussionUrl">
                   <span class="post-comments-count disqus-comment-count"
-                        data-disqus-identifier="2017/05/20/hello-world/" itemprop="commentCount"></span>
+                        data-disqus-identifier="2017/06/02/apache-beam-introduce/" itemprop="commentCount"></span>
                 </a>
               </span>
             
@@ -370,7 +375,7 @@
 
           
           
-             <span id="/2017/05/20/hello-world/" class="leancloud_visitors" data-flag-title="Hello World">
+             <span id="/2017/06/02/apache-beam-introduce/" class="leancloud_visitors" data-flag-title="Apache Beam 介绍">
                <span class="post-meta-divider">|</span>
                <span class="post-meta-item-icon">
                  <i class="fa fa-eye"></i>
@@ -398,15 +403,152 @@
       
 
       
-        <p>Welcome to <a href="https://hexo.io/" target="_blank" rel="external">Hexo</a>! This is your very first post. Check <a href="https://hexo.io/docs/" target="_blank" rel="external">documentation</a> for more info. If you get any problems when using Hexo, you can find the answer in <a href="https://hexo.io/docs/troubleshooting.html" target="_blank" rel="external">troubleshooting</a> or you can ask me on <a href="https://github.com/hexojs/hexo/issues" target="_blank" rel="external">GitHub</a>.</p>
-<h2 id="Quick-Start"><a href="#Quick-Start" class="headerlink" title="Quick Start"></a>Quick Start</h2><h3 id="Create-a-new-post"><a href="#Create-a-new-post" class="headerlink" title="Create a new post"></a>Create a new post</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ hexo new <span class="string">"My New Post"</span></div></pre></td></tr></table></figure>
-<p>More info: <a href="https://hexo.io/docs/writing.html" target="_blank" rel="external">Writing</a><br><a id="more"></a></p>
-<h3 id="Run-server"><a href="#Run-server" class="headerlink" title="Run server"></a>Run server</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ hexo server</div></pre></td></tr></table></figure>
-<p>More info: <a href="https://hexo.io/docs/server.html" target="_blank" rel="external">Server</a></p>
-<h3 id="Generate-static-files"><a href="#Generate-static-files" class="headerlink" title="Generate static files"></a>Generate static files</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ hexo generate</div></pre></td></tr></table></figure>
-<p>More info: <a href="https://hexo.io/docs/generating.html" target="_blank" rel="external">Generating</a></p>
-<h3 id="Deploy-to-remote-sites"><a href="#Deploy-to-remote-sites" class="headerlink" title="Deploy to remote sites"></a>Deploy to remote sites</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ hexo deploy</div></pre></td></tr></table></figure>
-<p>More info: <a href="https://hexo.io/docs/deployment.html" target="_blank" rel="external">Deployment</a></p>
+        <h2 id="背景介绍"><a href="#背景介绍" class="headerlink" title="背景介绍"></a>背景介绍</h2><p>作为一名大数据开发者，不得不说自从hadoop问世之后，接连而来的各种各样的大数据处理框架层出不穷，而我们则要不断的去学习，运用不同的技术、框架、api，甚至是开发语言以及sdk，去开发项目功能，解决项目问题。</p>
+<ul>
+<li>平台迁移问题：根据项目的需求，技术的更新迭代，项目性能的要求等等，同样的业务要在不同的框架上运行，可能你就要花费很长一段时间去学习新的框架，新的api。</li>
+<li>开发工具难抉择：近两年开启的开源大潮，为大数据开发者提供了十分富余的工具。但这同时也增加了开发者选择合适的工具的难度，尤其对于新入行的开发者来说。这很可能拖慢、甚至阻碍开源工具的发展<a id="more"></a>
+Apache Beam（原名Google DataFlow）是Google在2016年2月份贡献给Apache基金会的Apache孵化项目，被认为是继MapReduce，GFS和BigQuery等之后，Google在大数据处理领域对开源社区的又一个非常大的贡献。Apache Beam的主要目标是统一批处理和流处理的编程范式，为无限，乱序，web-scale的数据集处理提供简单灵活，功能丰富以及表达能力十分强大的SDK。<br>Apache Beam项目重点在于数据处理的编程范式和接口定义，并不涉及具体执行引擎的实现。<br>Apache Beam希望基于Beam开发的数据处理程序可以执行在任意的分布式计算引擎上<br><img src="/images/bigdata.png" alt="img"></li>
+</ul>
+<h2 id="特性"><a href="#特性" class="headerlink" title="特性"></a>特性</h2><ul>
+<li>统一(Unified)：<br> 对于批处理和流式处理，使用单一的编程模型，能够实现批处理（Batch processing）、流处理（Streaming Processing），通常的做法是把待处理的数据集（Dataset）统一，一般会把有界（Bound）数据集作为无界（Unbound）数据集的一种特殊情况来看待，比如Apache Flink便是按照这种方式处理，在差异化的API层之上构建一个统一的API层。</li>
+<li>可移植(Portable)：<br> 在多个不同的计算环境下，都能够执行已经定义好的数据处理Pipeline。也就是说，对数据集处理的定义（即构建的Data Pipeline），与最终所要Deploy的执行环境完全无关。这对实现数据处理的企业是非常友好的，当下数据处理新技术不断涌现，企业数据处理平台也为了能够与时俱进并提高处理效率，当然希望在底层计算平台升级的过程中无需重写上层已定义的Data Pipeline。<br> 目前，Apache Beam项目开发整体来看还处在初期，初步决定底层执行环境支持主流的计算平台：<br> Apache Apex、Apache Flink、Apache Spark、Google Cloud Dataflow。实际上，Apache Beam的这种统一编程模型，可以支持任意的计算引擎，通过Data Pipeline层与执行引擎层之间开发一个类似Driver的连接器即可实现。</li>
+<li>可拓展(Extensible)：可以实现和分享更多的新SDK、IO连接器、转换操作库等；</li>
+</ul>
+<!-- more -->
+<h2 id="核心概念"><a href="#核心概念" class="headerlink" title="核心概念"></a>核心概念</h2><h3 id="Pipeline"><a href="#Pipeline" class="headerlink" title="Pipeline"></a>Pipeline</h3><p>管道，包装数据处理流程任务</p>
+<h3 id="PCollection"><a href="#PCollection" class="headerlink" title="PCollection"></a>PCollection</h3><p>分布式数据集，PCollection是管道中每个步骤的输入、输出</p>
+<h3 id="Transforms"><a href="#Transforms" class="headerlink" title="Transforms"></a>Transforms</h3><p>管道中的每个步骤，它接收一个或者若干个输入PCollection，进行处理后，输出PCollection</p>
+<h3 id="I-O-sources-and-sinks"><a href="#I-O-sources-and-sinks" class="headerlink" title="I/O sources and sinks"></a>I/O sources and sinks</h3><p>source和sink用于提供数据的输入和输出端点<br>目前支持如下：</p>
+<h4 id="内嵌-I-O-转换"><a href="#内嵌-I-O-转换" class="headerlink" title="内嵌 I/O 转换"></a>内嵌 I/O 转换</h4><table>
+<thead>
+<tr>
+<th>Language</th>
+<th>File-based</th>
+<th>Messaging</th>
+<th>Database</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Java</td>
+<td>AvroIO<br>Apache Hadoop File System<br>TextIO<br>XML</td>
+<td>JMS<br>Apache Kafka<br>Amazon Kinesis<br>Google Cloud PubSub</td>
+<td>Apache Hadoop InputFormat<br>Apache HBase<br>MongoDB<br>JDBC<br>Google BigQuery<br>Google Cloud Bigtable<br>Google Cloud Datastore</td>
+</tr>
+<tr>
+<td>Python</td>
+<td>avroio<br>textio</td>
+<td></td>
+<td>Google BigQuery<br>Google Cloud Datastore</td>
+</tr>
+</tbody>
+</table>
+<h4 id="拓展-I-O-转换"><a href="#拓展-I-O-转换" class="headerlink" title="拓展 I/O 转换"></a>拓展 I/O 转换</h4><table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Language</th>
+<th>JIRA</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>AMQP</td>
+<td>Java</td>
+<td><a href="https://issues.apache.org/jira/browse/BEAM-1237" target="_blank" rel="external">BEAM-1237</a></td>
+</tr>
+<tr>
+<td>Apache Cassandra</td>
+<td>Java</td>
+<td><a href="https://issues.apache.org/jira/browse/BEAM-245" target="_blank" rel="external">BEAM-245</a></td>
+</tr>
+<tr>
+<td>Apache DistributedLog</td>
+<td>Java</td>
+<td><a href="https://issues.apache.org/jira/browse/BEAM-607" target="_blank" rel="external">BEAM-607</a></td>
+</tr>
+<tr>
+<td>Apache Hive</td>
+<td>Java</td>
+<td><a href="https://issues.apache.org/jira/browse/BEAM-1158" target="_blank" rel="external">BEAM-1158</a></td>
+</tr>
+<tr>
+<td>Apache Parquet</td>
+<td>Java</td>
+<td><a href="https://issues.apache.org/jira/browse/BEAM-214" target="_blank" rel="external">BEAM-214</a></td>
+</tr>
+<tr>
+<td>Apache Solr</td>
+<td>Java</td>
+<td><a href="https://issues.apache.org/jira/browse/BEAM-1236" target="_blank" rel="external">BEAM-1236</a></td>
+</tr>
+<tr>
+<td>Apache Sqoop</td>
+<td>Java</td>
+<td><a href="https://issues.apache.org/jira/browse/BEAM-67" target="_blank" rel="external">BEAM-67</a></td>
+</tr>
+<tr>
+<td>Couchbase</td>
+<td>Java</td>
+<td><a href="https://issues.apache.org/jira/browse/BEAM-1893" target="_blank" rel="external">BEAM-1893</a></td>
+</tr>
+<tr>
+<td>JSON</td>
+<td>Java</td>
+<td><a href="https://issues.apache.org/jira/browse/BEAM-1581" target="_blank" rel="external">BEAM-1581</a></td>
+</tr>
+<tr>
+<td>Memcached</td>
+<td>Java</td>
+<td><a href="https://issues.apache.org/jira/browse/BEAM-1678" target="_blank" rel="external">BEAM-1678</a></td>
+</tr>
+<tr>
+<td>Neo4j</td>
+<td>Java</td>
+<td><a href="https://issues.apache.org/jira/browse/BEAM-1857" target="_blank" rel="external">BEAM-1857</a></td>
+</tr>
+<tr>
+<td>Redis</td>
+<td>Java</td>
+<td><a href="https://issues.apache.org/jira/browse/BEAM-1017" target="_blank" rel="external">BEAM-1017</a></td>
+</tr>
+<tr>
+<td>RabbitMQ</td>
+<td>Java</td>
+<td><a href="https://issues.apache.org/jira/browse/BEAM-1240" target="_blank" rel="external">BEAM-1240</a></td>
+</tr>
+<tr>
+<td>RestIO</td>
+<td>Java</td>
+<td><a href="https://issues.apache.org/jira/browse/BEAM-1946" target="_blank" rel="external">BEAM-1946</a></td>
+</tr>
+<tr>
+<td>TikaIO</td>
+<td>Java</td>
+<td><a href="https://issues.apache.org/jira/browse/BEAM-2328" target="_blank" rel="external">BEAM-2328</a></td>
+</tr>
+<tr>
+<td>Cloud Spanner</td>
+<td>Java</td>
+<td><a href="https://issues.apache.org/jira/browse/BEAM-1542" target="_blank" rel="external">BEAM-1542</a></td>
+</tr>
+</tbody>
+</table>
+<h2 id="基本架构"><a href="#基本架构" class="headerlink" title="基本架构"></a>基本架构</h2><h3 id="架构图"><a href="#架构图" class="headerlink" title="架构图"></a>架构图</h3><p><img src="/images/apache-beam-framework.png" alt="img"><br>通过上图，我们可以清楚的知道，执行一个流程分以下步骤：</p>
+<ul>
+<li>End Users：选择一种你熟悉的编程语言提交应用</li>
+<li>SDK Writers：该编程语言必须是 Beam 模型支持的</li>
+<li>Library Writers：转换成Beam模型的格式</li>
+<li>Runner Writers：在分布式环境下处理并支持Beam的数据处理管道</li>
+<li>IO Providers：在Beam的数据处理管道上运行所有的应用</li>
+<li>DSL Writers：创建一个高阶的数据处理管道<h3 id="Beam核心组成部分"><a href="#Beam核心组成部分" class="headerlink" title="Beam核心组成部分"></a>Beam核心组成部分</h3></li>
+<li>Beam SDK<br> Beam SDK提供一个统一的编程接口给到上层应用的开发者，开发者不需要了解底层的具体的大数据平台的开发接口是什么，直接通过Beam SDK的接口，就可以开发数据处理的加工流程，不管输入是用于批处理的有限数据集，还是流式的无限数据集。对于有限或无限的输入数据，Beam SDK都使用相同的类来表现，并且使用相同的转换操作进行处理。Beam SDK可以有不同编程语言的实现，目前已经完整地提供了Java，python的SDK还在开发过程中，相信未来会有更多不同的语言的SDK会发布出来。</li>
+<li>Beam Pipeline Runner<br> Beam Pipeline Runner将用户用Beam模型定义开发的处理流程翻译成底层的分布式数据处理平台支持的运行时环境。在运行Beam程序时，需要指明底层的正确Runner类型。针对不同的大数据平台，会有不同的Runner。目前Flink、Spark、Apex以及谷歌的Cloud DataFlow都有支持Beam的Runner。</li>
+</ul>
+<h3 id="语言-Language"><a href="#语言-Language" class="headerlink" title="语言(Language)"></a>语言(Language)</h3><p><img src="/images/beam_architecture.png" alt="img"></p>
+<h3 id="运行器-Runner"><a href="#运行器-Runner" class="headerlink" title="运行器(Runner)"></a>运行器(Runner)</h3><p><img src="/images/beam-workers.jpg" alt="img"></p>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>Apache Beam的Beam Model对无限乱序数据流的数据处理进行了非常优雅的抽象，“WWWH”四个维度对数据处理的描述，非常清晰与合理，Beam Model在统一了对无限数据流和有限数据集的处理模式的同时，也明确了对无限数据流的数据处理方式的编程范式，扩大了流处理系统可应用的业务范围，例如，Event-Time/Session窗口的支持，乱序数据的处理支持等。Apache Flink，Apache Spark Streaming等项目的API设计均越来越多的借鉴或参考了Apache Beam Model，且作为Beam Runner的实现，与Beam SDK的兼容度也越来越高。<br>目前apache beam的开发处于初步阶段，对python的支持还在开发中，对java的支持的内容相对比较丰富，支持的runner也会逐步增加，实现平台迁移的可移植，降低／解决大数据开发者框架选择的问题。</p>
+<p>参考链接：<br><a href="https://www.infoq.com/presentations/apache-beam" target="_blank" rel="external">https://www.infoq.com/presentations/apache-beam</a><br><a href="https://beam.apache.org/documentation/io/built-in/" target="_blank" rel="external">https://beam.apache.org/documentation/io/built-in/</a><br><a href="http://www.cnblogs.com/smartloli/p/6685106.html" target="_blank" rel="external">http://www.cnblogs.com/smartloli/p/6685106.html</a></p>
 
       
     </div>
@@ -452,7 +594,7 @@
       
         <div class="post-tags">
           
-            <a href="/tags/Hello/" rel="tag"># Hello</a>
+            <a href="/tags/apache-beam/" rel="tag"># apache beam</a>
           
         </div>
       
@@ -465,14 +607,18 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
+              <a href="/2017/05/31/common-tools-repository/" rel="next" title="常用工具库">
+                <i class="fa fa-chevron-left"></i> 常用工具库
+              </a>
+            
           </div>
 
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
             
-              <a href="/2017/05/31/common-tools-repository/" rel="prev" title="常用工具库">
-                常用工具库 <i class="fa fa-chevron-right"></i>
+              <a href="/2017/06/02/apache-beam-protable-and-parallel-data-processing/" rel="prev" title="Apache Beam:便携式并行数据处理">
+                Apache Beam:便携式并行数据处理 <i class="fa fa-chevron-right"></i>
               </a>
             
           </div>
@@ -552,7 +698,7 @@
           
             <div class="site-state-item site-state-posts">
               <a href="/archives">
-                <span class="site-state-item-count">2</span>
+                <span class="site-state-item-count">3</span>
                 <span class="site-state-item-name">日志</span>
               </a>
             </div>
@@ -563,7 +709,7 @@
             
             <div class="site-state-item site-state-categories">
               <a href="/categories/index.html">
-                <span class="site-state-item-count">2</span>
+                <span class="site-state-item-count">3</span>
                 <span class="site-state-item-name">分类</span>
               </a>
             </div>
@@ -574,7 +720,7 @@
             
             <div class="site-state-item site-state-tags">
               <a href="/tags/index.html">
-                <span class="site-state-item-count">3</span>
+                <span class="site-state-item-count">4</span>
                 <span class="site-state-item-name">标签</span>
               </a>
             </div>
@@ -627,7 +773,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Quick-Start"><span class="nav-number">1.</span> <span class="nav-text">Quick Start</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Create-a-new-post"><span class="nav-number">1.1.</span> <span class="nav-text">Create a new post</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Run-server"><span class="nav-number">1.2.</span> <span class="nav-text">Run server</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Generate-static-files"><span class="nav-number">1.3.</span> <span class="nav-text">Generate static files</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Deploy-to-remote-sites"><span class="nav-number">1.4.</span> <span class="nav-text">Deploy to remote sites</span></a></li></ol></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#背景介绍"><span class="nav-number">1.</span> <span class="nav-text">背景介绍</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#特性"><span class="nav-number">2.</span> <span class="nav-text">特性</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#核心概念"><span class="nav-number">3.</span> <span class="nav-text">核心概念</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Pipeline"><span class="nav-number">3.1.</span> <span class="nav-text">Pipeline</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#PCollection"><span class="nav-number">3.2.</span> <span class="nav-text">PCollection</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Transforms"><span class="nav-number">3.3.</span> <span class="nav-text">Transforms</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#I-O-sources-and-sinks"><span class="nav-number">3.4.</span> <span class="nav-text">I/O sources and sinks</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#内嵌-I-O-转换"><span class="nav-number">3.4.1.</span> <span class="nav-text">内嵌 I/O 转换</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#拓展-I-O-转换"><span class="nav-number">3.4.2.</span> <span class="nav-text">拓展 I/O 转换</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#基本架构"><span class="nav-number">4.</span> <span class="nav-text">基本架构</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#架构图"><span class="nav-number">4.1.</span> <span class="nav-text">架构图</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Beam核心组成部分"><span class="nav-number">4.2.</span> <span class="nav-text">Beam核心组成部分</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#语言-Language"><span class="nav-number">4.3.</span> <span class="nav-text">语言(Language)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#运行器-Runner"><span class="nav-number">4.4.</span> <span class="nav-text">运行器(Runner)</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#总结"><span class="nav-number">5.</span> <span class="nav-text">总结</span></a></li></ol></div>
             
 
           </div>
@@ -777,9 +923,9 @@
     
       <script type="text/javascript">
         var disqus_config = function () {
-          this.page.url = 'http://yoursite.com/2017/05/20/hello-world/';
-          this.page.identifier = '2017/05/20/hello-world/';
-          this.page.title = 'Hello World';
+          this.page.url = 'http://yoursite.com/2017/06/02/apache-beam-introduce/';
+          this.page.identifier = '2017/06/02/apache-beam-introduce/';
+          this.page.title = 'Apache Beam 介绍';
         };
         var d = document, s = d.createElement('script');
         s.src = 'https://weijiyonglover.disqus.com/embed.js';
