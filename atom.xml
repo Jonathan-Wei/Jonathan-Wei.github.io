@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://yoursite.com/"/>
-  <updated>2017-06-02T08:27:43.000Z</updated>
+  <updated>2017-06-08T08:53:11.000Z</updated>
   <id>http://yoursite.com/</id>
   
   <author>
@@ -14,6 +14,45 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>Apache Beam Runner - Flink</title>
+    <link href="http://yoursite.com/2017/06/08/beam-2-0-0-runner-flink/"/>
+    <id>http://yoursite.com/2017/06/08/beam-2-0-0-runner-flink/</id>
+    <published>2017-06-08T08:12:25.000Z</published>
+    <updated>2017-06-08T08:53:11.000Z</updated>
+    
+    <content type="html"><![CDATA[<h2 id="使用Flink-Runner先决条件及步骤"><a href="#使用Flink-Runner先决条件及步骤" class="headerlink" title="使用Flink Runner先决条件及步骤"></a>使用Flink Runner先决条件及步骤</h2><h3 id="检查apache-beam对应版本所需要的flink版本"><a href="#检查apache-beam对应版本所需要的flink版本" class="headerlink" title="检查apache beam对应版本所需要的flink版本"></a>检查apache beam对应版本所需要的flink版本</h3><p>方式一：(推荐)<br>github上查找beam项目，找到指定版本的flink runner的pom.xml文件，检查flink.version版本<br><a href="https://github.com/apache/beam/blob/v2.0.0/runners/flink/pom.xml" target="_blank" rel="external">https://github.com/apache/beam/blob/v2.0.0/runners/flink/pom.xml</a><br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">&lt;properties&gt;</div><div class="line">    &lt;flink.version&gt;1.2.1&lt;/flink.version&gt;</div><div class="line">&lt;/properties&gt;</div></pre></td></tr></table></figure></p>
+<p>方式二：<br>官方所说的通过mvn命令查询支持的flink版本<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">$ mvn dependency:tree -Pflink-runner |grep flink</div><div class="line">...</div><div class="line">[INFO] |  +- org.apache.flink:flink-streaming-java_2.10:jar:1.1.2:runtime</div><div class="line">...</div></pre></td></tr></table></figure></p>
+<h3 id="下载，安装flink"><a href="#下载，安装flink" class="headerlink" title="下载，安装flink"></a>下载，安装flink</h3><h4 id="下载链接："><a href="#下载链接：" class="headerlink" title="下载链接："></a>下载链接：</h4><p><a href="http://archive.apache.org/dist/flink/flink-1.2.1/flink-1.2.1-bin-hadoop24-scala_2.10.tgz" target="_blank" rel="external">flink-1.2.1-bin-hadoop24-scala_2.10.tgz</a></p>
+<h4 id="安装"><a href="#安装" class="headerlink" title="安装"></a>安装</h4><p>flink安装可以参考官方的<a href="https://ci.apache.org/projects/flink/flink-docs-release-1.3/quickstart/setup_quickstart.html" target="_blank" rel="external">QuickStart</a>文档进行安装(测试只需要安装local模式)。</p>
+<h2 id="引入maven依赖"><a href="#引入maven依赖" class="headerlink" title="引入maven依赖"></a>引入maven依赖</h2><p>使用java作为开发语言，需要在项目的pom.xml文件中加入此依赖<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">&lt;dependency&gt;</div><div class="line">  &lt;groupId&gt;org.apache.beam&lt;/groupId&gt;</div><div class="line">  &lt;artifactId&gt;beam-runners-flink_2.10&lt;/artifactId&gt;</div><div class="line">  &lt;version&gt;2.0.0&lt;/version&gt;</div><div class="line">  &lt;scope&gt;runtime&lt;/scope&gt;</div><div class="line">&lt;/dependency&gt;</div></pre></td></tr></table></figure></p>
+<h2 id="使用flink-runner执行pipeline"><a href="#使用flink-runner执行pipeline" class="headerlink" title="使用flink runner执行pipeline"></a>使用flink runner执行pipeline</h2><p>apache beam使用flink runner通过-P指定<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ mvn package -Pflink-runner</div></pre></td></tr></table></figure></p>
+<p>下面是官方给的一个例子<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">$ mvn <span class="built_in">exec</span>:java -Dexec.mainClass=org.apache.beam.examples.WordCount \</div><div class="line">    -Pflink-runner \</div><div class="line">    -Dexec.args=<span class="string">"--runner=FlinkRunner \</span></div><div class="line">      --inputFile=/path/to/pom.xml \</div><div class="line">      --output=/path/to/counts \</div><div class="line">      --flinkMaster=&lt;flink master url&gt; \</div><div class="line">      --filesToStage=target/word-count-beam--bundled-0.1.jar"</div></pre></td></tr></table></figure></p>
+<p>注：<br>–flinkMaster:指定flink jobmanager访问地址，本地模式为localhost:6123;<br>–filesToStage:指定运行的jar包<br>以下两个参数为pipeline options提供给flink runner的内置参数，更多内置参数请点击<a href="https://beam.apache.org/documentation/runners/flink/" target="_blank" rel="external">这里</a>查阅   </p>
+<h2 id="遇到的问题"><a href="#遇到的问题" class="headerlink" title="遇到的问题"></a>遇到的问题</h2><h3 id="问题：apache-beam-2-0-0与apache-flink1-3-0版本问题"><a href="#问题：apache-beam-2-0-0与apache-flink1-3-0版本问题" class="headerlink" title="问题：apache beam 2.0.0与apache flink1.3.0版本问题"></a>问题：apache beam 2.0.0与apache flink1.3.0版本问题</h3><p>apache beam 2.0.0的runner flink是基于flink 1.2.1版本编译的，而flink1.3.0版本删除了JobSnapshottingSettings类，导致用flink1.3.0运行的时候抛ClassNotFoundException异常。<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">java.lang.ClassNotFoundException: org.apache.flink.runtime.jobgraph.tasks.JobSnapshottingSettings</div><div class="line">    at java.net.URLClassLoader.findClass(URLClassLoader.java:381)</div><div class="line">    at java.lang.ClassLoader.loadClass(ClassLoader.java:424)</div><div class="line">    at sun.misc.Launcher<span class="variable">$AppClassLoader</span>.loadClass(Launcher.java:331)</div><div class="line">    ... (省略部分日志)</div></pre></td></tr></table></figure></p>
+<p>解决方法：</p>
+<ul>
+<li>如果想使用最新的flink1.3.0，建议直接从github下载源码自行编译，目前apache beam的master分支已经是采用flink1.3.0版本。</li>
+<li>采用flink1.2.1版本运行程序</li>
+</ul>
+<p>参考链接：<br><a href="https://beam.apache.org/documentation/runners/flink/" target="_blank" rel="external">https://beam.apache.org/documentation/runners/flink/</a><br><a href="https://github.com/apache/beam/blob/v2.0.0/runners/flink/pom.xml" target="_blank" rel="external">https://github.com/apache/beam/blob/v2.0.0/runners/flink/pom.xml</a></p>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;h2 id=&quot;使用Flink-Runner先决条件及步骤&quot;&gt;&lt;a href=&quot;#使用Flink-Runner先决条件及步骤&quot; class=&quot;headerlink&quot; title=&quot;使用Flink Runner先决条件及步骤&quot;&gt;&lt;/a&gt;使用Flink Runner先决条件及步骤&lt;/
+    
+    </summary>
+    
+      <category term="apache beam" scheme="http://yoursite.com/categories/apache-beam/"/>
+    
+    
+      <category term="apache beam" scheme="http://yoursite.com/tags/apache-beam/"/>
+    
+      <category term="apache flink" scheme="http://yoursite.com/tags/apache-flink/"/>
+    
+  </entry>
   
   <entry>
     <title>Apache Beam:便携式并行数据处理</title>
