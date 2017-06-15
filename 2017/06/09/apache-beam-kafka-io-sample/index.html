@@ -1,0 +1,973 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+  <link href="//cdn.jsdelivr.net/fancybox/2.1.5/jquery.fancybox.min.css" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+  
+
+<link href="//maxcdn.bootstrapcdn.com/font-awesome/4.6.2/css/font-awesome.min.css" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.1" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="apache beam,kafka," />
+
+
+
+
+
+  <link rel="alternate" href="/atom.xml" title="Jonathan.Wei's Notes" type="application/atom+xml" />
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.1" />
+
+
+
+
+
+
+<meta name="description" content="之前在网上看到这样一个例子https://github.com/wtanaka/streaming/blob/d2e63184f604ea42d9711dd59951af3f3f4200f9/beam/src/main/java/com/wtanaka/streaming/beam/KafkaToKafka.java但是从代码的设计上看对flink kafka存在依赖，而这样编写代码我觉得违背了a">
+<meta name="keywords" content="apache beam,kafka">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Apache Beam IO - KafkaIO">
+<meta property="og:url" content="http://yoursite.com/2017/06/09/apache-beam-kafka-io-sample/index.html">
+<meta property="og:site_name" content="Jonathan.Wei&#39;s Notes">
+<meta property="og:description" content="之前在网上看到这样一个例子https://github.com/wtanaka/streaming/blob/d2e63184f604ea42d9711dd59951af3f3f4200f9/beam/src/main/java/com/wtanaka/streaming/beam/KafkaToKafka.java但是从代码的设计上看对flink kafka存在依赖，而这样编写代码我觉得违背了a">
+<meta property="og:image" content="http://yoursite.com/images/beam-flink-sample.png">
+<meta property="og:image" content="http://yoursite.com/images/beam-kafka-sample.png">
+<meta property="og:updated_time" content="2017-06-15T07:20:16.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Apache Beam IO - KafkaIO">
+<meta name="twitter:description" content="之前在网上看到这样一个例子https://github.com/wtanaka/streaming/blob/d2e63184f604ea42d9711dd59951af3f3f4200f9/beam/src/main/java/com/wtanaka/streaming/beam/KafkaToKafka.java但是从代码的设计上看对flink kafka存在依赖，而这样编写代码我觉得违背了a">
+<meta name="twitter:image" content="http://yoursite.com/images/beam-flink-sample.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2017/06/09/apache-beam-kafka-io-sample/"/>
+
+
+
+
+
+  <title>Apache Beam IO - KafkaIO | Jonathan.Wei's Notes</title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Jonathan.Wei's Notes</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-commonweal">
+          <a href="/404.html" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-heartbeat"></i> <br />
+            
+            公益404
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/06/09/apache-beam-kafka-io-sample/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Jonathan.Wei">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/headportrait.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Jonathan.Wei's Notes">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">Apache Beam IO - KafkaIO</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-06-09T10:20:48+08:00">
+                2017-06-09
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/apache-beam/" itemprop="url" rel="index">
+                    <span itemprop="name">apache beam</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2017/06/09/apache-beam-kafka-io-sample/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count disqus-comment-count"
+                        data-disqus-identifier="2017/06/09/apache-beam-kafka-io-sample/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+             <span id="/2017/06/09/apache-beam-kafka-io-sample/" class="leancloud_visitors" data-flag-title="Apache Beam IO - KafkaIO">
+               <span class="post-meta-divider">|</span>
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               
+                 <span class="post-meta-item-text">阅读次数 </span>
+               
+                 <span class="leancloud-visitors-count"></span>
+             </span>
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>之前在网上看到这样一个例子<br><a href="https://github.com/wtanaka/streaming/blob/d2e63184f604ea42d9711dd59951af3f3f4200f9/beam/src/main/java/com/wtanaka/streaming/beam/KafkaToKafka.java" target="_blank" rel="external">https://github.com/wtanaka/streaming/blob/d2e63184f604ea42d9711dd59951af3f3f4200f9/beam/src/main/java/com/wtanaka/streaming/beam/KafkaToKafka.java</a><br>但是从代码的设计上看对flink kafka存在依赖，而这样编写代码我觉得违背了apache beam的初衷，下面我自己写了一个很简单的例子，从kafka input-topic读取数据，写入kafka output-topic。<br>这里我只是做一个简单测试，所以使用的都是单机模式的kafka、zookeeper和flink</p>
+<h2 id="公共参数"><a href="#公共参数" class="headerlink" title="公共参数"></a>公共参数</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line">private static final long WINDOW_SIZE = 10;</div><div class="line">// Default window duration in seconds</div><div class="line">private static final long SLIDE_SIZE = 5;</div><div class="line">// Default window slide in seconds</div><div class="line">private static final String KAFKA_TOPIC = &quot;input-topic&quot;;</div><div class="line">private static final String KAFKA_OUTPUT_TOPIC = &quot;output-topic&quot;;</div><div class="line">private static final String KAFKA_BROKER = &quot;localhost:9092&quot;;</div><div class="line">// Default kafka broker to contact</div><div class="line">private static final String GROUP_ID = &quot;beamGroup&quot;; // Default groupId</div><div class="line">private static final String ZOOKEEPER = &quot;localhost:2181&quot;;</div></pre></td></tr></table></figure>
+<a id="more"></a>
+<h2 id="创建option"><a href="#创建option" class="headerlink" title="创建option"></a>创建option</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div></pre></td><td class="code"><pre><div class="line">public interface KafkaOptions extends PipelineOptions &#123;</div><div class="line">        @Description(&quot;Sliding window duration, in seconds&quot;)</div><div class="line">        @Default.Long(WINDOW_SIZE)</div><div class="line">        Long getWindowSize();</div><div class="line"></div><div class="line">        void setWindowSize(Long value);</div><div class="line"></div><div class="line">        @Description(&quot;Window slide, in seconds&quot;)</div><div class="line">        @Default.Long(SLIDE_SIZE)</div><div class="line">        Long getSlide();</div><div class="line"></div><div class="line">        void setSlide(Long value);</div><div class="line"></div><div class="line">        @Description(&quot;The Kafka topic to read from&quot;)</div><div class="line">        @Default.String(KAFKA_TOPIC)</div><div class="line">        String getKafkaTopic();</div><div class="line"></div><div class="line">        void setKafkaTopic(String value);</div><div class="line"></div><div class="line">        @Description(&quot;The Kafka topic to write to&quot;)</div><div class="line">        @Default.String(KAFKA_OUTPUT_TOPIC)</div><div class="line">        String getOutputKafkaTopic();</div><div class="line"></div><div class="line">        void setOutputKafkaTopic(String value);</div><div class="line"></div><div class="line">        @Description(&quot;The Kafka Broker to read from&quot;)</div><div class="line">        @Default.String(KAFKA_BROKER)</div><div class="line">        String getBroker();</div><div class="line"></div><div class="line">        void setBroker(String value);</div><div class="line"></div><div class="line">        @Description(&quot;The Zookeeper server to connect to&quot;)</div><div class="line">        @Default.String(ZOOKEEPER)</div><div class="line">        String getZookeeper();</div><div class="line"></div><div class="line">        void setZookeeper(String value);</div><div class="line"></div><div class="line">        @Description(&quot;The groupId&quot;)</div><div class="line">        @Default.String(GROUP_ID)</div><div class="line">        String getGroup();</div><div class="line"></div><div class="line">        void setGroup(String value);</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h2 id="KafkaIO-Read"><a href="#KafkaIO-Read" class="headerlink" title="KafkaIO Read"></a>KafkaIO Read</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">KafkaIO.&lt;Long, String&gt;read()</div><div class="line">                   .withBootstrapServers(&quot;localhost:9092&quot;)</div><div class="line">                   .withTopic(KAFKA_TOPIC)  // use withTopics(List&lt;String&gt;) to read from multiple topics.</div><div class="line">                   .withKeyDeserializer(LongDeserializer.class)</div><div class="line">                   .withValueDeserializer(StringDeserializer.class)</div><div class="line">                   .withoutMetadata() // PCollection&lt;KV&lt;String, String&gt;&gt;</div></pre></td></tr></table></figure>
+<h2 id="KafkaIO-Write"><a href="#KafkaIO-Write" class="headerlink" title="KafkaIO Write"></a>KafkaIO Write</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">KafkaIO.&lt;Long, String&gt;write()</div><div class="line">                    .withBootstrapServers(&quot;localhost:9092&quot;)</div><div class="line">                    .withTopic(KAFKA_OUTPUT_TOPIC)</div><div class="line">                    .withKeySerializer(LongSerializer.class)</div><div class="line">                    .withValueSerializer(StringSerializer.class)</div><div class="line">                    // you can further customize KafkaProducer used to write the records by adding more</div><div class="line">                    // settings for ProducerConfig. e.g, to enable compression :</div><div class="line">                    //.updateProducerProperties(ImmutableMap.of(&quot;compression.type&quot;, &quot;gzip&quot;))</div></pre></td></tr></table></figure>
+<h2 id="完整代码"><a href="#完整代码" class="headerlink" title="完整代码"></a>完整代码</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div><div class="line">70</div><div class="line">71</div><div class="line">72</div><div class="line">73</div><div class="line">74</div><div class="line">75</div><div class="line">76</div><div class="line">77</div><div class="line">78</div><div class="line">79</div><div class="line">80</div><div class="line">81</div><div class="line">82</div><div class="line">83</div><div class="line">84</div><div class="line">85</div><div class="line">86</div><div class="line">87</div><div class="line">88</div><div class="line">89</div><div class="line">90</div><div class="line">91</div><div class="line">92</div><div class="line">93</div><div class="line">94</div><div class="line">95</div></pre></td><td class="code"><pre><div class="line">package com.exmind.beam;</div><div class="line"></div><div class="line">import org.apache.beam.sdk.Pipeline;</div><div class="line">import org.apache.beam.sdk.io.kafka.KafkaIO;</div><div class="line">import org.apache.beam.sdk.options.Default;</div><div class="line">import org.apache.beam.sdk.options.Description;</div><div class="line">import org.apache.beam.sdk.options.PipelineOptions;</div><div class="line">import org.apache.beam.sdk.options.PipelineOptionsFactory;</div><div class="line">import org.apache.kafka.common.serialization.LongDeserializer;</div><div class="line">import org.apache.kafka.common.serialization.LongSerializer;</div><div class="line">import org.apache.kafka.common.serialization.StringDeserializer;</div><div class="line">import org.apache.kafka.common.serialization.StringSerializer;</div><div class="line"></div><div class="line">public class App &#123;</div><div class="line"></div><div class="line">    private static final long WINDOW_SIZE = 10;</div><div class="line">    // Default window duration in seconds</div><div class="line">    private static final long SLIDE_SIZE = 5;</div><div class="line">    // Default window slide in seconds</div><div class="line">    private static final String KAFKA_TOPIC = &quot;input-topic&quot;;</div><div class="line">    private static final String KAFKA_OUTPUT_TOPIC = &quot;output-topic&quot;;</div><div class="line">    private static final String KAFKA_BROKER = &quot;localhost:9092&quot;;</div><div class="line">    // Default kafka broker to contact</div><div class="line">    private static final String GROUP_ID = &quot;beamGroup&quot;; // Default groupId</div><div class="line">    private static final String ZOOKEEPER = &quot;localhost:2181&quot;;</div><div class="line"></div><div class="line">    public interface KafkaOptions extends PipelineOptions &#123;</div><div class="line">        @Description(&quot;Sliding window duration, in seconds&quot;)</div><div class="line">        @Default.Long(WINDOW_SIZE)</div><div class="line">        Long getWindowSize();</div><div class="line"></div><div class="line">        void setWindowSize(Long value);</div><div class="line"></div><div class="line">        @Description(&quot;Window slide, in seconds&quot;)</div><div class="line">        @Default.Long(SLIDE_SIZE)</div><div class="line">        Long getSlide();</div><div class="line"></div><div class="line">        void setSlide(Long value);</div><div class="line"></div><div class="line">        @Description(&quot;The Kafka topic to read from&quot;)</div><div class="line">        @Default.String(KAFKA_TOPIC)</div><div class="line">        String getKafkaTopic();</div><div class="line"></div><div class="line">        void setKafkaTopic(String value);</div><div class="line"></div><div class="line">        @Description(&quot;The Kafka topic to write to&quot;)</div><div class="line">        @Default.String(KAFKA_OUTPUT_TOPIC)</div><div class="line">        String getOutputKafkaTopic();</div><div class="line"></div><div class="line">        void setOutputKafkaTopic(String value);</div><div class="line"></div><div class="line">        @Description(&quot;The Kafka Broker to read from&quot;)</div><div class="line">        @Default.String(KAFKA_BROKER)</div><div class="line">        String getBroker();</div><div class="line"></div><div class="line">        void setBroker(String value);</div><div class="line"></div><div class="line">        @Description(&quot;The Zookeeper server to connect to&quot;)</div><div class="line">        @Default.String(ZOOKEEPER)</div><div class="line">        String getZookeeper();</div><div class="line"></div><div class="line">        void setZookeeper(String value);</div><div class="line"></div><div class="line">        @Description(&quot;The groupId&quot;)</div><div class="line">        @Default.String(GROUP_ID)</div><div class="line">        String getGroup();</div><div class="line"></div><div class="line">        void setGroup(String value);</div><div class="line">    &#125;</div><div class="line">        </div><div class="line">    public static void main(String[] args) &#123;</div><div class="line">        KafkaOptions options = PipelineOptionsFactory.fromArgs(args).withValidation().as(KafkaOptions.class);</div><div class="line">        options.setJobName(&quot;KafkaExample - WindowSize: &quot; + options.getWindowSize() + &quot; seconds&quot;);</div><div class="line"></div><div class="line">        Pipeline pipeline = Pipeline.create(options);</div><div class="line"></div><div class="line">        pipeline.apply(KafkaIO.&lt;Long, String&gt;read()</div><div class="line">                   .withBootstrapServers(&quot;localhost:9092&quot;)</div><div class="line">                   .withTopic(KAFKA_TOPIC)  // use withTopics(List&lt;String&gt;) to read from multiple topics.</div><div class="line">                   .withKeyDeserializer(LongDeserializer.class)</div><div class="line">                   .withValueDeserializer(StringDeserializer.class)</div><div class="line">                   .withoutMetadata() // PCollection&lt;KV&lt;String, String&gt;&gt;</div><div class="line">        ).apply(KafkaIO.&lt;Long, String&gt;write()</div><div class="line">                    .withBootstrapServers(&quot;localhost:9092&quot;)</div><div class="line">                    .withTopic(KAFKA_OUTPUT_TOPIC)</div><div class="line">                    .withKeySerializer(LongSerializer.class)</div><div class="line">                    .withValueSerializer(StringSerializer.class)</div><div class="line">                    // you can further customize KafkaProducer used to write the records by adding more</div><div class="line">                    // settings for ProducerConfig. e.g, to enable compression </div><div class="line">                    //.updateProducerProperties(ImmutableMap.of(&quot;compression.type&quot;, &quot;gzip&quot;))</div><div class="line">        );</div><div class="line">                   </div><div class="line">        pipeline.run();</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<div class="note danger"><p>这里注释掉的updateProducerProperties方法，可以用于设置kafka写入时所需的参数 </p>
+</div>
+<h2 id="运行任务"><a href="#运行任务" class="headerlink" title="运行任务"></a>运行任务</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">mvn exec:java -Dexec.mainClass=com.exmind.beam.App \</div><div class="line">    -Pflink-runner \</div><div class="line">    -Dexec.args=&quot;--runner=FlinkRunner \</div><div class="line">      --flinkMaster=localhost:6123 \</div><div class="line">      --filesToStage=target/com.exmind.beam-0.0.1-SNAPSHOT.jar&quot;</div></pre></td></tr></table></figure>
+<p>使用-P指定runner，这里指定flink-runner作为运行器</p>
+<h2 id="流程验证"><a href="#流程验证" class="headerlink" title="流程验证"></a>流程验证</h2><h3 id="flink运行状态检查"><a href="#flink运行状态检查" class="headerlink" title="flink运行状态检查"></a>flink运行状态检查</h3><p><img src="/images/beam-flink-sample.png" alt="img"></p>
+<h3 id="kafka数据输入输出检查"><a href="#kafka数据输入输出检查" class="headerlink" title="kafka数据输入输出检查"></a>kafka数据输入输出检查</h3><p><img src="/images/beam-kafka-sample.png" alt="img"></p>
+<p>参考链接：<br><a href="https://beam.apache.org/documentation/sdks/javadoc/2.0.0/" target="_blank" rel="external">https://beam.apache.org/documentation/sdks/javadoc/2.0.0/</a><br><a href="https://github.com/apache/beam/blob/master/sdks/java/io/kafka/src/test/java/org/apache/beam/sdk/io/kafka/KafkaIOTest.java" target="_blank" rel="external">https://github.com/apache/beam/blob/master/sdks/java/io/kafka/src/test/java/org/apache/beam/sdk/io/kafka/KafkaIOTest.java</a></p>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+  <div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center;">
+    <div>坚持原创技术分享，您的支持将鼓励为继续创作！</div>
+    <button id="rewardButton" disable="enable" onclick="var qr = document.getElementById('QR'); if (qr.style.display === 'none') {qr.style.display='block';} else {qr.style.display='none'}">
+      <span>赏</span>
+    </button>
+    <div id="QR" style="display: none;">
+      
+        <div id="wechat" style="display: inline-block">
+          <img id="wechat_qr" src="/images/wechatpay.jpg" alt="Jonathan.Wei WeChat Pay"/>
+          <p>微信打赏</p>
+        </div>
+      
+      
+    </div>
+  </div>
+
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/apache-beam/" rel="tag"># apache beam</a>
+          
+            <a href="/tags/kafka/" rel="tag"># kafka</a>
+          
+        </div>
+      
+
+      
+        
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/06/08/beam-2-0-0-runner-flink/" rel="next" title="Apache Beam Runner - Flink">
+                <i class="fa fa-chevron-left"></i> Apache Beam Runner - Flink
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+      <div id="disqus_thread">
+        <noscript>
+          Please enable JavaScript to view the
+          <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a>
+        </noscript>
+      </div>
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/headportrait.jpg"
+               alt="Jonathan.Wei" />
+          <p class="site-author-name" itemprop="name">Jonathan.Wei</p>
+           
+              <p class="site-description motion-element" itemprop="description"></p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives">
+                <span class="site-state-item-count">6</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-categories">
+              <a href="/categories/index.html">
+                <span class="site-state-item-count">3</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">6</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+          <div class="feed-link motion-element">
+            <a href="/atom.xml" rel="alternate">
+              <i class="fa fa-rss"></i>
+              RSS
+            </a>
+          </div>
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/Jonathan-Wei" target="_blank" title="GitHub">
+                  
+                    <i class="fa fa-fw fa-github"></i>
+                  
+                  GitHub
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#公共参数"><span class="nav-number">1.</span> <span class="nav-text">公共参数</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#创建option"><span class="nav-number">2.</span> <span class="nav-text">创建option</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#KafkaIO-Read"><span class="nav-number">3.</span> <span class="nav-text">KafkaIO Read</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#KafkaIO-Write"><span class="nav-number">4.</span> <span class="nav-text">KafkaIO Write</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#完整代码"><span class="nav-number">5.</span> <span class="nav-text">完整代码</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#运行任务"><span class="nav-number">6.</span> <span class="nav-text">运行任务</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#流程验证"><span class="nav-number">7.</span> <span class="nav-text">流程验证</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#flink运行状态检查"><span class="nav-number">7.1.</span> <span class="nav-text">flink运行状态检查</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#kafka数据输入输出检查"><span class="nav-number">7.2.</span> <span class="nav-text">kafka数据输入输出检查</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2017</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Jonathan.Wei</span>
+</div>
+
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Pisces
+  </a>
+</div>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="//cdn.jsdelivr.net/jquery/2.1.3/jquery.min.js"></script>
+
+  
+  <script type="text/javascript" src="//cdn.jsdelivr.net/fastclick/1.0.6/fastclick.min.js"></script>
+
+  
+  <script type="text/javascript" src="//cdn.jsdelivr.net/jquery.lazyload/1.9.3/jquery.lazyload.min.js"></script>
+
+  
+  <script type="text/javascript" src="//cdn.jsdelivr.net/velocity/1.2.3/velocity.min.js"></script>
+
+  
+  <script type="text/javascript" src="//cdn.jsdelivr.net/velocity/1.2.3/velocity.ui.min.js"></script>
+
+  
+  <script type="text/javascript" src="//cdn.jsdelivr.net/fancybox/2.1.5/jquery.fancybox.pack.js"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.1"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.1"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.1"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.1"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.1"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.1"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.1"></script>
+
+
+
+  
+
+
+  
+
+    
+      <script id="dsq-count-scr" src="https://weijiyonglover.disqus.com/count.js" async></script>
+    
+
+    
+      <script type="text/javascript">
+        var disqus_config = function () {
+          this.page.url = 'http://yoursite.com/2017/06/09/apache-beam-kafka-io-sample/';
+          this.page.identifier = '2017/06/09/apache-beam-kafka-io-sample/';
+          this.page.title = 'Apache Beam IO - KafkaIO';
+        };
+        var d = document, s = d.createElement('script');
+        s.src = 'https://weijiyonglover.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', '' + +new Date());
+        (d.head || d.body).appendChild(s);
+      </script>
+    
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+  <script src="https://cdn1.lncld.net/static/js/av-core-mini-0.6.1.js"></script>
+  <script>AV.initialize("3iVIndIeuvoWfV0e40zfO1aH-gzGzoHsz", "X5nEggXgDiIYp7KF9VUvDbXR");</script>
+  <script>
+    function showTime(Counter) {
+      var query = new AV.Query(Counter);
+      var entries = [];
+      var $visitors = $(".leancloud_visitors");
+
+      $visitors.each(function () {
+        entries.push( $(this).attr("id").trim() );
+      });
+
+      query.containedIn('url', entries);
+      query.find()
+        .done(function (results) {
+          var COUNT_CONTAINER_REF = '.leancloud-visitors-count';
+
+          if (results.length === 0) {
+            $visitors.find(COUNT_CONTAINER_REF).text(0);
+            return;
+          }
+
+          for (var i = 0; i < results.length; i++) {
+            var item = results[i];
+            var url = item.get('url');
+            var time = item.get('time');
+            var element = document.getElementById(url);
+
+            $(element).find(COUNT_CONTAINER_REF).text(time);
+          }
+          for(var i = 0; i < entries.length; i++) {
+            var url = entries[i];
+            var element = document.getElementById(url);
+            var countSpan = $(element).find(COUNT_CONTAINER_REF);
+            if( countSpan.text() == '') {
+              countSpan.text(0);
+            }
+          }
+        })
+        .fail(function (object, error) {
+          console.log("Error: " + error.code + " " + error.message);
+        });
+    }
+
+    function addCount(Counter) {
+      var $visitors = $(".leancloud_visitors");
+      var url = $visitors.attr('id').trim();
+      var title = $visitors.attr('data-flag-title').trim();
+      var query = new AV.Query(Counter);
+
+      query.equalTo("url", url);
+      query.find({
+        success: function(results) {
+          if (results.length > 0) {
+            var counter = results[0];
+            counter.fetchWhenSave(true);
+            counter.increment("time");
+            counter.save(null, {
+              success: function(counter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(counter.get('time'));
+              },
+              error: function(counter, error) {
+                console.log('Failed to save Visitor num, with error message: ' + error.message);
+              }
+            });
+          } else {
+            var newcounter = new Counter();
+            /* Set ACL */
+            var acl = new AV.ACL();
+            acl.setPublicReadAccess(true);
+            acl.setPublicWriteAccess(true);
+            newcounter.setACL(acl);
+            /* End Set ACL */
+            newcounter.set("title", title);
+            newcounter.set("url", url);
+            newcounter.set("time", 1);
+            newcounter.save(null, {
+              success: function(newcounter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(newcounter.get('time'));
+              },
+              error: function(newcounter, error) {
+                console.log('Failed to create');
+              }
+            });
+          }
+        },
+        error: function(error) {
+          console.log('Error:' + error.code + " " + error.message);
+        }
+      });
+    }
+
+    $(function() {
+      var Counter = AV.Object.extend("Counter");
+      if ($('.leancloud_visitors').length == 1) {
+        addCount(Counter);
+      } else if ($('.post-title-link').length > 1) {
+        showTime(Counter);
+      }
+    });
+  </script>
+
+
+
+  
+
+  
+  
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {
+          inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+          processEscapes: true,
+          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+        }
+      });
+    </script>
+
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for (i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+      });
+    </script>
+    <script type="text/javascript" src="//cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+  
+
+
+  
+
+  
+
+</body>
+</html>

@@ -103,7 +103,7 @@
 <meta property="og:url" content="http://yoursite.com/2017/06/08/beam-2-0-0-runner-flink/index.html">
 <meta property="og:site_name" content="Jonathan.Wei&#39;s Notes">
 <meta property="og:description" content="使用Flink Runner先决条件及步骤检查apache beam对应版本所需要的flink版本方式一：(推荐)github上查找beam项目，找到指定版本的flink runner的pom.xml文件，检查flink.version版本https://github.com/apache/beam/blob/v2.0.0/runners/flink/pom.xml123&amp;lt;propertie">
-<meta property="og:updated_time" content="2017-06-08T08:56:35.000Z">
+<meta property="og:updated_time" content="2017-06-15T03:50:11.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Apache Beam Runner - Flink">
 <meta name="twitter:description" content="使用Flink Runner先决条件及步骤检查apache beam对应版本所需要的flink版本方式一：(推荐)github上查找beam项目，找到指定版本的flink runner的pom.xml文件，检查flink.version版本https://github.com/apache/beam/blob/v2.0.0/runners/flink/pom.xml123&amp;lt;propertie">
@@ -407,7 +407,9 @@
 <h2 id="使用flink-runner执行pipeline"><a href="#使用flink-runner执行pipeline" class="headerlink" title="使用flink runner执行pipeline"></a>使用flink runner执行pipeline</h2><p>apache beam使用flink runner通过-P指定<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ mvn package -Pflink-runner</div></pre></td></tr></table></figure></p>
 <p>下面是官方给的一个例子<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">$ mvn <span class="built_in">exec</span>:java -Dexec.mainClass=org.apache.beam.examples.WordCount \</div><div class="line">    -Pflink-runner \</div><div class="line">    -Dexec.args=<span class="string">"--runner=FlinkRunner \</span></div><div class="line">      --inputFile=/path/to/pom.xml \</div><div class="line">      --output=/path/to/counts \</div><div class="line">      --flinkMaster=&lt;flink master url&gt; \</div><div class="line">      --filesToStage=target/word-count-beam--bundled-0.1.jar"</div></pre></td></tr></table></figure></p>
 <p>注：<br>–flinkMaster:指定flink jobmanager访问地址，本地模式为localhost:6123;<br>–filesToStage:指定运行的jar包<br>以下两个参数为pipeline options提供给flink runner的内置参数，更多内置参数请点击<a href="https://beam.apache.org/documentation/runners/flink/" target="_blank" rel="external">这里</a>查阅   </p>
-<h2 id="遇到的问题"><a href="#遇到的问题" class="headerlink" title="遇到的问题"></a>遇到的问题</h2><h3 id="问题：apache-beam-2-0-0与apache-flink1-3-0版本问题"><a href="#问题：apache-beam-2-0-0与apache-flink1-3-0版本问题" class="headerlink" title="问题：apache beam 2.0.0与apache flink1.3.0版本问题"></a>问题：apache beam 2.0.0与apache flink1.3.0版本问题</h3><p>apache beam 2.0.0的runner flink是基于flink 1.2.1版本编译的，而flink1.3.0版本删除了JobSnapshottingSettings类，导致用flink1.3.0运行的时候抛ClassNotFoundException异常。<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">java.lang.ClassNotFoundException: org.apache.flink.runtime.jobgraph.tasks.JobSnapshottingSettings</div><div class="line">    at java.net.URLClassLoader.findClass(URLClassLoader.java:381)</div><div class="line">    at java.lang.ClassLoader.loadClass(ClassLoader.java:424)</div><div class="line">    at sun.misc.Launcher<span class="variable">$AppClassLoader</span>.loadClass(Launcher.java:331)</div><div class="line">    ... (省略部分日志)</div></pre></td></tr></table></figure></p>
+<h2 id="遇到的问题"><a href="#遇到的问题" class="headerlink" title="遇到的问题"></a>遇到的问题</h2><h3 id="依赖包"><a href="#依赖包" class="headerlink" title="依赖包"></a>依赖包</h3><p>将以下以来包放入flink lib目录下<br><div class="note info"><p> beam-runners-flink_2.10-2.0.0.jar<br>beam-sdks-java-core-2.0.0.jar<br>beam-sdks-java-io-kafka-2.0.0.jar<br>kafka-clients-0.10.1.0.jar<br>kafka_2.10-0.8.2.2.jar<br>beam-runners-core-java-2.0.0.jar<br>spring-core-4.3.6.RELEASE.jar<br>spring-expression-4.3.6.RELEASE.jar </p>
+</div></p>
+<h3 id="问题：apache-beam-2-0-0与apache-flink1-3-0版本问题"><a href="#问题：apache-beam-2-0-0与apache-flink1-3-0版本问题" class="headerlink" title="问题：apache beam 2.0.0与apache flink1.3.0版本问题"></a>问题：apache beam 2.0.0与apache flink1.3.0版本问题</h3><p>apache beam 2.0.0的runner flink是基于flink 1.2.1版本编译的，而flink1.3.0版本删除了JobSnapshottingSettings类，导致用flink1.3.0运行的时候抛ClassNotFoundException异常。<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">java.lang.ClassNotFoundException: org.apache.flink.runtime.jobgraph.tasks.JobSnapshottingSettings</div><div class="line">    at java.net.URLClassLoader.findClass(URLClassLoader.java:381)</div><div class="line">    at java.lang.ClassLoader.loadClass(ClassLoader.java:424)</div><div class="line">    at sun.misc.Launcher<span class="variable">$AppClassLoader</span>.loadClass(Launcher.java:331)</div><div class="line">    ... (省略部分日志)</div></pre></td></tr></table></figure></p>
 <p>解决方法：</p>
 <ul>
 <li>如果想使用最新的flink1.3.0，建议直接从github下载源码自行编译，目前apache beam的master分支已经是采用flink1.3.0版本。</li>
@@ -483,6 +485,10 @@
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2017/06/09/apache-beam-kafka-io-sample/" rel="prev" title="Apache Beam IO - KafkaIO">
+                Apache Beam IO - KafkaIO <i class="fa fa-chevron-right"></i>
+              </a>
             
           </div>
         </div>
@@ -561,7 +567,7 @@
           
             <div class="site-state-item site-state-posts">
               <a href="/archives">
-                <span class="site-state-item-count">5</span>
+                <span class="site-state-item-count">6</span>
                 <span class="site-state-item-name">日志</span>
               </a>
             </div>
@@ -583,7 +589,7 @@
             
             <div class="site-state-item site-state-tags">
               <a href="/tags/index.html">
-                <span class="site-state-item-count">5</span>
+                <span class="site-state-item-count">6</span>
                 <span class="site-state-item-name">标签</span>
               </a>
             </div>
@@ -636,7 +642,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#使用Flink-Runner先决条件及步骤"><span class="nav-number">1.</span> <span class="nav-text">使用Flink Runner先决条件及步骤</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#检查apache-beam对应版本所需要的flink版本"><span class="nav-number">1.1.</span> <span class="nav-text">检查apache beam对应版本所需要的flink版本</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#下载，安装flink"><span class="nav-number">1.2.</span> <span class="nav-text">下载，安装flink</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#下载链接："><span class="nav-number">1.2.1.</span> <span class="nav-text">下载链接：</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#安装"><span class="nav-number">1.2.2.</span> <span class="nav-text">安装</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#引入maven依赖"><span class="nav-number">2.</span> <span class="nav-text">引入maven依赖</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#使用flink-runner执行pipeline"><span class="nav-number">3.</span> <span class="nav-text">使用flink runner执行pipeline</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#遇到的问题"><span class="nav-number">4.</span> <span class="nav-text">遇到的问题</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#问题：apache-beam-2-0-0与apache-flink1-3-0版本问题"><span class="nav-number">4.1.</span> <span class="nav-text">问题：apache beam 2.0.0与apache flink1.3.0版本问题</span></a></li></ol></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#使用Flink-Runner先决条件及步骤"><span class="nav-number">1.</span> <span class="nav-text">使用Flink Runner先决条件及步骤</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#检查apache-beam对应版本所需要的flink版本"><span class="nav-number">1.1.</span> <span class="nav-text">检查apache beam对应版本所需要的flink版本</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#下载，安装flink"><span class="nav-number">1.2.</span> <span class="nav-text">下载，安装flink</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#下载链接："><span class="nav-number">1.2.1.</span> <span class="nav-text">下载链接：</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#安装"><span class="nav-number">1.2.2.</span> <span class="nav-text">安装</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#引入maven依赖"><span class="nav-number">2.</span> <span class="nav-text">引入maven依赖</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#使用flink-runner执行pipeline"><span class="nav-number">3.</span> <span class="nav-text">使用flink runner执行pipeline</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#遇到的问题"><span class="nav-number">4.</span> <span class="nav-text">遇到的问题</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#依赖包"><span class="nav-number">4.1.</span> <span class="nav-text">依赖包</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#问题：apache-beam-2-0-0与apache-flink1-3-0版本问题"><span class="nav-number">4.2.</span> <span class="nav-text">问题：apache beam 2.0.0与apache flink1.3.0版本问题</span></a></li></ol></li></ol></div>
             
 
           </div>
