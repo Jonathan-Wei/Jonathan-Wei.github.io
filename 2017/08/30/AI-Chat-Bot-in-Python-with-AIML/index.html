@@ -1,0 +1,962 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+  <link href="//cdn.jsdelivr.net/fancybox/2.1.5/jquery.fancybox.min.css" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+  
+
+<link href="//maxcdn.bootstrapcdn.com/font-awesome/4.6.2/css/font-awesome.min.css" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.1" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="aiml,chatbot,ai," />
+
+
+
+
+
+  <link rel="alternate" href="/atom.xml" title="Jonathan.Wei's Notes" type="application/atom+xml" />
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.1" />
+
+
+
+
+
+
+<meta name="description" content="aiml介绍AIML是Richard Wallace开发的。 他开发了一个叫A.L.I.C.E（Artificial Linguistics Internet Computer Entity）的机器人并且赢了几个人工智能的奖项。 有趣的是， 其中一个图灵测试是让一个人在文本界面跟一个机器人聊几分钟，看看人们是否认为它是个人类。 AIML是一种定义了匹配模式和决定响应的规则的一种XML。 要看完整的">
+<meta name="keywords" content="aiml,chatbot,ai">
+<meta property="og:type" content="article">
+<meta property="og:title" content="使用aiml开发智能聊天机器人">
+<meta property="og:url" content="http://yoursite.com/2017/08/30/AI-Chat-Bot-in-Python-with-AIML/index.html">
+<meta property="og:site_name" content="Jonathan.Wei&#39;s Notes">
+<meta property="og:description" content="aiml介绍AIML是Richard Wallace开发的。 他开发了一个叫A.L.I.C.E（Artificial Linguistics Internet Computer Entity）的机器人并且赢了几个人工智能的奖项。 有趣的是， 其中一个图灵测试是让一个人在文本界面跟一个机器人聊几分钟，看看人们是否认为它是个人类。 AIML是一种定义了匹配模式和决定响应的规则的一种XML。 要看完整的">
+<meta property="og:updated_time" content="2017-08-30T09:02:10.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="使用aiml开发智能聊天机器人">
+<meta name="twitter:description" content="aiml介绍AIML是Richard Wallace开发的。 他开发了一个叫A.L.I.C.E（Artificial Linguistics Internet Computer Entity）的机器人并且赢了几个人工智能的奖项。 有趣的是， 其中一个图灵测试是让一个人在文本界面跟一个机器人聊几分钟，看看人们是否认为它是个人类。 AIML是一种定义了匹配模式和决定响应的规则的一种XML。 要看完整的">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2017/08/30/AI-Chat-Bot-in-Python-with-AIML/"/>
+
+
+
+
+
+  <title>使用aiml开发智能聊天机器人 | Jonathan.Wei's Notes</title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Jonathan.Wei's Notes</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/08/30/AI-Chat-Bot-in-Python-with-AIML/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Jonathan.Wei">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/headportrait.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Jonathan.Wei's Notes">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">使用aiml开发智能聊天机器人</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-08-30T16:57:26+08:00">
+                2017-08-30
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/aiml/" itemprop="url" rel="index">
+                    <span itemprop="name">aiml</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2017/08/30/AI-Chat-Bot-in-Python-with-AIML/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count disqus-comment-count"
+                        data-disqus-identifier="2017/08/30/AI-Chat-Bot-in-Python-with-AIML/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+             <span id="/2017/08/30/AI-Chat-Bot-in-Python-with-AIML/" class="leancloud_visitors" data-flag-title="使用aiml开发智能聊天机器人">
+               <span class="post-meta-divider">|</span>
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               
+                 <span class="post-meta-item-text">阅读次数 </span>
+               
+                 <span class="leancloud-visitors-count"></span>
+             </span>
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h1 id="aiml介绍"><a href="#aiml介绍" class="headerlink" title="aiml介绍"></a>aiml介绍</h1><p>AIML是Richard Wallace开发的。 他开发了一个叫A.L.I.C.E（Artificial Linguistics Internet Computer Entity）的机器人并且赢了几个人工智能的奖项。 有趣的是， 其中一个图灵测试是让一个人在文本界面跟一个机器人聊几分钟，看看人们是否认为它是个人类。 AIML是一种定义了匹配模式和决定响应的规则的一种XML。</p>
+<p>要看完整的AIML入门，可以看一下 Alice Bot’s AIML Primer.你可以在AIML wiki页学更多关于AIML的知识并知道它能做什么。 我们先写一些AIML文件并用Python给它一点生命。</p>
+<h1 id="安装"><a href="#安装" class="headerlink" title="安装"></a>安装</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">pip install aiml</div></pre></td></tr></table></figure>
+<h1 id="aiml自带简易英文语料库"><a href="#aiml自带简易英文语料库" class="headerlink" title="aiml自带简易英文语料库"></a>aiml自带简易英文语料库</h1><p>Python aiml安装完成后在Python安装目录下的 site-packages/aiml下会有alice子目录，这个是系统自带的一个简单的语料库。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">alice</div><div class="line">standard</div></pre></td></tr></table></figure></p>
+<a id="more"></a>
+<p>#常见标准启动文件 std-startup.xml<br>std-startup.xml用于加载aiml文件到大脑。<br><figure class="highlight xml"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div></pre></td><td class="code"><pre><div class="line"><span class="tag">&lt;<span class="name">aiml</span> <span class="attr">version</span>=<span class="string">"1.0.1"</span> <span class="attr">encoding</span>=<span class="string">"UTF-8"</span>&gt;</span></div><div class="line">    <span class="comment">&lt;!-- std-startup.xml --&gt;</span></div><div class="line"></div><div class="line">    <span class="comment">&lt;!-- Category is an atomic AIML unit --&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="name">category</span>&gt;</span></div><div class="line"></div><div class="line">        <span class="comment">&lt;!-- Pattern to match in user input --&gt;</span></div><div class="line">        <span class="comment">&lt;!-- If user enters "LOAD AIML B" --&gt;</span></div><div class="line">        <span class="tag">&lt;<span class="name">pattern</span>&gt;</span>LOAD AIML B<span class="tag">&lt;/<span class="name">pattern</span>&gt;</span></div><div class="line"></div><div class="line">        <span class="comment">&lt;!-- Template is the response to the pattern --&gt;</span></div><div class="line">        <span class="comment">&lt;!-- This learn an aiml file --&gt;</span></div><div class="line">        <span class="tag">&lt;<span class="name">template</span>&gt;</span></div><div class="line">            <span class="tag">&lt;<span class="name">learn</span>&gt;</span>basic_chat.aiml<span class="tag">&lt;/<span class="name">learn</span>&gt;</span></div><div class="line">            <span class="comment">&lt;!-- You can add more aiml files here --&gt;</span></div><div class="line">            <span class="comment">&lt;!--&lt;learn&gt;more_aiml.aiml&lt;/learn&gt;--&gt;</span></div><div class="line">        <span class="tag">&lt;/<span class="name">template</span>&gt;</span></div><div class="line">        </div><div class="line">    <span class="tag">&lt;/<span class="name">category</span>&gt;</span></div><div class="line"></div><div class="line"><span class="tag">&lt;/<span class="name">aiml</span>&gt;</span></div></pre></td></tr></table></figure></p>
+<p>注：采用learn标签来学习aiml文件。这里通过load aiml b命令来匹配，当用户输入这个命令的时候会自动执行重新加载操作。匹配多个aiml文件可以将配置改成 *.aiml</p>
+<h1 id="创建aiml文件"><a href="#创建aiml文件" class="headerlink" title="创建aiml文件"></a>创建aiml文件</h1><figure class="highlight xml"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div></pre></td><td class="code"><pre><div class="line"><span class="tag">&lt;<span class="name">aiml</span> <span class="attr">version</span>=<span class="string">"1.0.1"</span> <span class="attr">encoding</span>=<span class="string">"UTF-8"</span>&gt;</span></div><div class="line"><span class="comment">&lt;!-- basic_chat.aiml --&gt;</span></div><div class="line"></div><div class="line">    <span class="tag">&lt;<span class="name">category</span>&gt;</span></div><div class="line">        <span class="tag">&lt;<span class="name">pattern</span>&gt;</span>HELLO<span class="tag">&lt;/<span class="name">pattern</span>&gt;</span></div><div class="line">        <span class="tag">&lt;<span class="name">template</span>&gt;</span></div><div class="line">            Well, hello!</div><div class="line">        <span class="tag">&lt;/<span class="name">template</span>&gt;</span></div><div class="line">    <span class="tag">&lt;/<span class="name">category</span>&gt;</span></div><div class="line">    </div><div class="line">    <span class="tag">&lt;<span class="name">category</span>&gt;</span></div><div class="line">        <span class="tag">&lt;<span class="name">pattern</span>&gt;</span>WHAT ARE YOU<span class="tag">&lt;/<span class="name">pattern</span>&gt;</span></div><div class="line">        <span class="tag">&lt;<span class="name">template</span>&gt;</span></div><div class="line">            I'm a bot, silly!</div><div class="line">        <span class="tag">&lt;/<span class="name">template</span>&gt;</span></div><div class="line">    <span class="tag">&lt;/<span class="name">category</span>&gt;</span></div><div class="line">    </div><div class="line"><span class="tag">&lt;/<span class="name">aiml</span>&gt;</span></div></pre></td></tr></table></figure>
+<p>注：pattern标签中，英文必须大写</p>
+<p>#随机响应<br>相信这个大伙都是很容易理解的，就是随机从中抽取一个答案回答用户<br><figure class="highlight xml"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div></pre></td><td class="code"><pre><div class="line"><span class="tag">&lt;<span class="name">category</span>&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="name">pattern</span>&gt;</span>ONE TIME I *<span class="tag">&lt;/<span class="name">pattern</span>&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="name">template</span>&gt;</span></div><div class="line">        <span class="tag">&lt;<span class="name">random</span>&gt;</span></div><div class="line">            <span class="tag">&lt;<span class="name">li</span>&gt;</span>Go on.<span class="tag">&lt;/<span class="name">li</span>&gt;</span></div><div class="line">            <span class="tag">&lt;<span class="name">li</span>&gt;</span>How old are you?<span class="tag">&lt;/<span class="name">li</span>&gt;</span></div><div class="line">            <span class="tag">&lt;<span class="name">li</span>&gt;</span>Be more specific.<span class="tag">&lt;/<span class="name">li</span>&gt;</span></div><div class="line">            <span class="tag">&lt;<span class="name">li</span>&gt;</span>I did not know that.<span class="tag">&lt;/<span class="name">li</span>&gt;</span></div><div class="line">            <span class="tag">&lt;<span class="name">li</span>&gt;</span>Are you telling the truth?<span class="tag">&lt;/<span class="name">li</span>&gt;</span></div><div class="line">            <span class="tag">&lt;<span class="name">li</span>&gt;</span>I don't know what that means.<span class="tag">&lt;/<span class="name">li</span>&gt;</span></div><div class="line">            <span class="tag">&lt;<span class="name">li</span>&gt;</span>Try to tell me that another way.<span class="tag">&lt;/<span class="name">li</span>&gt;</span></div><div class="line">            <span class="tag">&lt;<span class="name">li</span>&gt;</span>Are you talking about an animal, vegetable or mineral?<span class="tag">&lt;/<span class="name">li</span>&gt;</span></div><div class="line">            <span class="tag">&lt;<span class="name">li</span>&gt;</span>What is it?<span class="tag">&lt;/<span class="name">li</span>&gt;</span></div><div class="line">        <span class="tag">&lt;/<span class="name">random</span>&gt;</span></div><div class="line">    <span class="tag">&lt;/<span class="name">template</span>&gt;</span></div><div class="line"><span class="tag">&lt;/<span class="name">category</span>&gt;</span></div></pre></td></tr></table></figure></p>
+<h1 id="使用已存在的aiml"><a href="#使用已存在的aiml" class="headerlink" title="使用已存在的aiml"></a>使用已存在的aiml</h1><p>编写你自己的AIML文件是一个很有趣的事，但是它将花费很大的功夫。我觉得它需要大概10,000个模式才会开始变得真实起来。幸运的是，ALICE基金会提供了大量免费的AIML文件。在<a href="http://www.alicebot.org/aiml/aaa/" target="_blank" rel="external">Alice Bot website</a>上浏览AIML文件。</p>
+<p>#新建一个机器人<br>这里我们就不累赘这个过程讲解了，如果想了解可以看下面的参考链接，这里我们直接上最终代码</p>
+<h2 id="启动程序"><a href="#启动程序" class="headerlink" title="启动程序"></a>启动程序</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div></pre></td><td class="code"><pre><div class="line"># -*- coding: utf-8 -*-</div><div class="line">import aiml</div><div class="line">import os</div><div class="line"></div><div class="line"></div><div class="line">mybot_path = &apos;./Alice&apos;</div><div class="line">#切换到语料库所在工作目录</div><div class="line">os.chdir(mybot_path)</div><div class="line"></div><div class="line">mybot = aiml.Kernel()</div><div class="line"></div><div class="line">sessionId = &quot;&quot;</div><div class="line">#Get session info as dictionary. Contains the input</div><div class="line"># and output history as well as any predicates known</div><div class="line">#sessionData = mybot.getSessionData(sessionId)</div><div class="line"></div><div class="line"># Each session ID needs to be a unique value</div><div class="line"># The predicate name is the name of something/someone</div><div class="line"># that the bot knows about in your session with the bot</div><div class="line"># The bot might know you as &quot;Billy&quot; and that your &quot;dog&quot; is named &quot;Brandy&quot;</div><div class="line">#mybot.setPredicate(&quot;dog&quot;, &quot;Brandy&quot;, sessionId)</div><div class="line">#mybot.setBotPredicate(&quot;hometown&quot;, &quot;127.0.0.1&quot;)</div><div class="line"></div><div class="line">if os.path.isfile(&quot;chatbot_brain.brn&quot;):</div><div class="line">    mybot.bootstrap(brainFile=&quot;chat_brain.brn&quot;)</div><div class="line">else:</div><div class="line">    mybot.bootstrap(learnFiles=&quot;std-startup.xml&quot;, commands=&quot;load aiml b&quot;)</div><div class="line">    mybot.saveBrain(&quot;chatbot_brain.brn&quot;)</div><div class="line"></div><div class="line">while True:</div><div class="line">    message = raw_input(&quot;Enter your message &gt;&gt; &quot;)</div><div class="line">    if &quot;session&quot; in message:</div><div class="line">        sessionId = message</div><div class="line">        sessionData = mybot.getSessionData(sessionId)</div><div class="line">    elif message == &quot;quit&quot;:</div><div class="line">        exit()</div><div class="line">    elif message == &quot;save&quot;:</div><div class="line">        mybot.saveBrain(&quot;vigorbot_brain.brn&quot;)</div><div class="line">    else:</div><div class="line">        bot_response = mybot.respond(message,sessionId)</div><div class="line">        #Do something with bot_response</div><div class="line">        print(bot_response)</div></pre></td></tr></table></figure>
+<p>这里为了做测试我做了下修改，通过输入包含session字符串信息来设置session，测试session记录信息的分离，我们来看下测试结果<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div></pre></td><td class="code"><pre><div class="line">Enter your message &gt;&gt; session1</div><div class="line">Enter your message &gt;&gt; My dogs name is Max</div><div class="line">That is interesting that you have a dog named Max</div><div class="line">Enter your message &gt;&gt; What is my dogs name?</div><div class="line">Your dog&apos;s name is Max.</div><div class="line">Enter your message &gt;&gt;</div><div class="line"></div><div class="line">Enter your message &gt;&gt; session2</div><div class="line">Enter your message &gt;&gt; My dogs name is Max2</div><div class="line">That is interesting that you have a dog named Max2</div><div class="line">Enter your message &gt;&gt; What is my dogs name?</div><div class="line">Your dog&apos;s name is Max2.</div><div class="line">Enter your message &gt;&gt;</div><div class="line"></div><div class="line">Enter your message &gt;&gt; session1</div><div class="line">Enter your message &gt;&gt; What is my dogs name?</div><div class="line">Your dog&apos;s name is Max.</div><div class="line"></div><div class="line">Enter your message &gt;&gt; session2</div><div class="line">Enter your message &gt;&gt; What is my dogs name?</div><div class="line">Your dog&apos;s name is Max2.</div></pre></td></tr></table></figure></p>
+<p>看我们的session分离的效果出来了。但是很遗憾的是，当我save之后关闭程序重新启动，session的信息并没有被保存下来。</p>
+<p>#缺点</p>
+<ul>
+<li>中文aiml语料库过少，人工制作语料库成本太高</li>
+<li>session信息并未作保存，这个是需要自己去优化修改的</li>
+</ul>
+<p>参考链接：<br><a href="http://www.devdungeon.com/content/ai-chat-bot-python-aiml" target="_blank" rel="external">http://www.devdungeon.com/content/ai-chat-bot-python-aiml</a><br><a href="https://www.pandorabots.com/botmaster/en/tutorial" target="_blank" rel="external">https://www.pandorabots.com/botmaster/en/tutorial</a><br><a href="http://www.alicebot.org/aiml/aaa/" target="_blank" rel="external">http://www.alicebot.org/aiml/aaa/</a><br><a href="https://www.biaodianfu.com/python-aiml.html" target="_blank" rel="external">https://www.biaodianfu.com/python-aiml.html</a><br><a href="http://www.alicebot.org/documentation/aiml101.html" target="_blank" rel="external">http://www.alicebot.org/documentation/aiml101.html</a><br><a href="https://www.tutorialspoint.com/aiml/index.htm" target="_blank" rel="external">https://www.tutorialspoint.com/aiml/index.htm</a></p>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+  <div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center;">
+    <div>坚持原创技术分享，您的支持将鼓励为继续创作！</div>
+    <button id="rewardButton" disable="enable" onclick="var qr = document.getElementById('QR'); if (qr.style.display === 'none') {qr.style.display='block';} else {qr.style.display='none'}">
+      <span>赏</span>
+    </button>
+    <div id="QR" style="display: none;">
+      
+        <div id="wechat" style="display: inline-block">
+          <img id="wechat_qr" src="/images/wechatpay.jpg" alt="Jonathan.Wei WeChat Pay"/>
+          <p>微信打赏</p>
+        </div>
+      
+      
+    </div>
+  </div>
+
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/aiml/" rel="tag"># aiml</a>
+          
+            <a href="/tags/chatbot/" rel="tag"># chatbot</a>
+          
+            <a href="/tags/ai/" rel="tag"># ai</a>
+          
+        </div>
+      
+
+      
+        
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/06/16/design-your-pipeline/" rel="next" title="Apache beam - Pipeline设计">
+                <i class="fa fa-chevron-left"></i> Apache beam - Pipeline设计
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+      <div id="disqus_thread">
+        <noscript>
+          Please enable JavaScript to view the
+          <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a>
+        </noscript>
+      </div>
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/headportrait.jpg"
+               alt="Jonathan.Wei" />
+          <p class="site-author-name" itemprop="name">Jonathan.Wei</p>
+           
+              <p class="site-description motion-element" itemprop="description"></p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives">
+                <span class="site-state-item-count">9</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-categories">
+              <a href="/categories/index.html">
+                <span class="site-state-item-count">4</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">9</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+          <div class="feed-link motion-element">
+            <a href="/atom.xml" rel="alternate">
+              <i class="fa fa-rss"></i>
+              RSS
+            </a>
+          </div>
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/Jonathan-Wei" target="_blank" title="GitHub">
+                  
+                    <i class="fa fa-fw fa-github"></i>
+                  
+                  GitHub
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#aiml介绍"><span class="nav-number">1.</span> <span class="nav-text">aiml介绍</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#安装"><span class="nav-number">2.</span> <span class="nav-text">安装</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#aiml自带简易英文语料库"><span class="nav-number">3.</span> <span class="nav-text">aiml自带简易英文语料库</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#创建aiml文件"><span class="nav-number">4.</span> <span class="nav-text">创建aiml文件</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#使用已存在的aiml"><span class="nav-number">5.</span> <span class="nav-text">使用已存在的aiml</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#启动程序"><span class="nav-number">5.1.</span> <span class="nav-text">启动程序</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2017</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Jonathan.Wei</span>
+</div>
+
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Mist
+  </a>
+</div>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="//cdn.jsdelivr.net/jquery/2.1.3/jquery.min.js"></script>
+
+  
+  <script type="text/javascript" src="//cdn.jsdelivr.net/fastclick/1.0.6/fastclick.min.js"></script>
+
+  
+  <script type="text/javascript" src="//cdn.jsdelivr.net/jquery.lazyload/1.9.3/jquery.lazyload.min.js"></script>
+
+  
+  <script type="text/javascript" src="//cdn.jsdelivr.net/velocity/1.2.3/velocity.min.js"></script>
+
+  
+  <script type="text/javascript" src="//cdn.jsdelivr.net/velocity/1.2.3/velocity.ui.min.js"></script>
+
+  
+  <script type="text/javascript" src="//cdn.jsdelivr.net/fancybox/2.1.5/jquery.fancybox.pack.js"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.1"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.1"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.1"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.1"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.1"></script>
+
+
+
+  
+
+
+  
+
+    
+      <script id="dsq-count-scr" src="https://weijiyonglover.disqus.com/count.js" async></script>
+    
+
+    
+      <script type="text/javascript">
+        var disqus_config = function () {
+          this.page.url = 'http://yoursite.com/2017/08/30/AI-Chat-Bot-in-Python-with-AIML/';
+          this.page.identifier = '2017/08/30/AI-Chat-Bot-in-Python-with-AIML/';
+          this.page.title = '使用aiml开发智能聊天机器人';
+        };
+        var d = document, s = d.createElement('script');
+        s.src = 'https://weijiyonglover.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', '' + +new Date());
+        (d.head || d.body).appendChild(s);
+      </script>
+    
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+  <script src="https://cdn1.lncld.net/static/js/av-core-mini-0.6.1.js"></script>
+  <script>AV.initialize("3iVIndIeuvoWfV0e40zfO1aH-gzGzoHsz", "X5nEggXgDiIYp7KF9VUvDbXR");</script>
+  <script>
+    function showTime(Counter) {
+      var query = new AV.Query(Counter);
+      var entries = [];
+      var $visitors = $(".leancloud_visitors");
+
+      $visitors.each(function () {
+        entries.push( $(this).attr("id").trim() );
+      });
+
+      query.containedIn('url', entries);
+      query.find()
+        .done(function (results) {
+          var COUNT_CONTAINER_REF = '.leancloud-visitors-count';
+
+          if (results.length === 0) {
+            $visitors.find(COUNT_CONTAINER_REF).text(0);
+            return;
+          }
+
+          for (var i = 0; i < results.length; i++) {
+            var item = results[i];
+            var url = item.get('url');
+            var time = item.get('time');
+            var element = document.getElementById(url);
+
+            $(element).find(COUNT_CONTAINER_REF).text(time);
+          }
+          for(var i = 0; i < entries.length; i++) {
+            var url = entries[i];
+            var element = document.getElementById(url);
+            var countSpan = $(element).find(COUNT_CONTAINER_REF);
+            if( countSpan.text() == '') {
+              countSpan.text(0);
+            }
+          }
+        })
+        .fail(function (object, error) {
+          console.log("Error: " + error.code + " " + error.message);
+        });
+    }
+
+    function addCount(Counter) {
+      var $visitors = $(".leancloud_visitors");
+      var url = $visitors.attr('id').trim();
+      var title = $visitors.attr('data-flag-title').trim();
+      var query = new AV.Query(Counter);
+
+      query.equalTo("url", url);
+      query.find({
+        success: function(results) {
+          if (results.length > 0) {
+            var counter = results[0];
+            counter.fetchWhenSave(true);
+            counter.increment("time");
+            counter.save(null, {
+              success: function(counter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(counter.get('time'));
+              },
+              error: function(counter, error) {
+                console.log('Failed to save Visitor num, with error message: ' + error.message);
+              }
+            });
+          } else {
+            var newcounter = new Counter();
+            /* Set ACL */
+            var acl = new AV.ACL();
+            acl.setPublicReadAccess(true);
+            acl.setPublicWriteAccess(true);
+            newcounter.setACL(acl);
+            /* End Set ACL */
+            newcounter.set("title", title);
+            newcounter.set("url", url);
+            newcounter.set("time", 1);
+            newcounter.save(null, {
+              success: function(newcounter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(newcounter.get('time'));
+              },
+              error: function(newcounter, error) {
+                console.log('Failed to create');
+              }
+            });
+          }
+        },
+        error: function(error) {
+          console.log('Error:' + error.code + " " + error.message);
+        }
+      });
+    }
+
+    $(function() {
+      var Counter = AV.Object.extend("Counter");
+      if ($('.leancloud_visitors').length == 1) {
+        addCount(Counter);
+      } else if ($('.post-title-link').length > 1) {
+        showTime(Counter);
+      }
+    });
+  </script>
+
+
+
+  
+
+  
+  
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {
+          inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+          processEscapes: true,
+          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+        }
+      });
+    </script>
+
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for (i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+      });
+    </script>
+    <script type="text/javascript" src="//cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+  
+
+
+  
+
+  
+
+</body>
+</html>
