@@ -78,7 +78,7 @@
 <link href="/css/main.css?v=5.1.1" rel="stylesheet" type="text/css" />
 
 
-  <meta name="keywords" content="apache beam,apache flink," />
+  <meta name="keywords" content="tensorflow,spark,standalone," />
 
 
 
@@ -96,17 +96,17 @@
 
 
 
-<meta name="description" content="使用Flink Runner先决条件及步骤检查apache beam对应版本所需要的flink版本方式一：(推荐)github上查找beam项目，找到指定版本的flink runner的pom.xml文件，检查flink.version版本https://github.com/apache/beam/blob/v2.0.0/runners/flink/pom.xml123&amp;lt;propertie">
-<meta name="keywords" content="apache beam,apache flink">
+<meta name="description" content="预先条件安装tensorflow环境 下载tensorflowonspark代码123git clone https://github.com/yahoo/TensorFlowOnSpark.gitcd TensorFlowOnSparkexport TFoS_HOME=$(pwd) #安装Spark这里tensorflowOnSpark中提供了一个脚本用于下载spark，我们直接执行这个命令。1">
+<meta name="keywords" content="tensorflow,spark,standalone">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Apache Beam Runner - Flink">
-<meta property="og:url" content="http://yoursite.com/2017/06/08/beam-2-0-0-runner-flink/index.html">
+<meta property="og:title" content="Spark集成TensorflowOnSpark standalone模式下测试mnist">
+<meta property="og:url" content="http://yoursite.com/2017/08/30/tensorflow-on-spark-standalone/index.html">
 <meta property="og:site_name" content="Jonathan.Wei&#39;s Notes">
-<meta property="og:description" content="使用Flink Runner先决条件及步骤检查apache beam对应版本所需要的flink版本方式一：(推荐)github上查找beam项目，找到指定版本的flink runner的pom.xml文件，检查flink.version版本https://github.com/apache/beam/blob/v2.0.0/runners/flink/pom.xml123&amp;lt;propertie">
-<meta property="og:updated_time" content="2017-06-15T09:32:26.000Z">
+<meta property="og:description" content="预先条件安装tensorflow环境 下载tensorflowonspark代码123git clone https://github.com/yahoo/TensorFlowOnSpark.gitcd TensorFlowOnSparkexport TFoS_HOME=$(pwd) #安装Spark这里tensorflowOnSpark中提供了一个脚本用于下载spark，我们直接执行这个命令。1">
+<meta property="og:updated_time" content="2017-08-30T09:12:00.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Apache Beam Runner - Flink">
-<meta name="twitter:description" content="使用Flink Runner先决条件及步骤检查apache beam对应版本所需要的flink版本方式一：(推荐)github上查找beam项目，找到指定版本的flink runner的pom.xml文件，检查flink.version版本https://github.com/apache/beam/blob/v2.0.0/runners/flink/pom.xml123&amp;lt;propertie">
+<meta name="twitter:title" content="Spark集成TensorflowOnSpark standalone模式下测试mnist">
+<meta name="twitter:description" content="预先条件安装tensorflow环境 下载tensorflowonspark代码123git clone https://github.com/yahoo/TensorFlowOnSpark.gitcd TensorFlowOnSparkexport TFoS_HOME=$(pwd) #安装Spark这里tensorflowOnSpark中提供了一个脚本用于下载spark，我们直接执行这个命令。1">
 
 
 
@@ -134,13 +134,13 @@
 
 
 
-  <link rel="canonical" href="http://yoursite.com/2017/06/08/beam-2-0-0-runner-flink/"/>
+  <link rel="canonical" href="http://yoursite.com/2017/08/30/tensorflow-on-spark-standalone/"/>
 
 
 
 
 
-  <title>Apache Beam Runner - Flink | Jonathan.Wei's Notes</title>
+  <title>Spark集成TensorflowOnSpark standalone模式下测试mnist | Jonathan.Wei's Notes</title>
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
@@ -280,7 +280,7 @@
   
 
   <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/06/08/beam-2-0-0-runner-flink/">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/08/30/tensorflow-on-spark-standalone/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="Jonathan.Wei">
@@ -297,7 +297,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">Apache Beam Runner - Flink</h1>
+          <h1 class="post-title" itemprop="name headline">Spark集成TensorflowOnSpark standalone模式下测试mnist</h1>
         
 
         <div class="post-meta">
@@ -309,8 +309,8 @@
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-06-08T16:12:25+08:00">
-                2017-06-08
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-08-30T17:06:01+08:00">
+                2017-08-30
               </time>
             
 
@@ -332,8 +332,8 @@
               
               
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/apache-beam/" itemprop="url" rel="index">
-                    <span itemprop="name">apache beam</span>
+                  <a href="/categories/tensorflow/" itemprop="url" rel="index">
+                    <span itemprop="name">tensorflow</span>
                   </a>
                 </span>
 
@@ -350,9 +350,9 @@
                 <span class="post-meta-item-icon">
                   <i class="fa fa-comment-o"></i>
                 </span>
-                <a href="/2017/06/08/beam-2-0-0-runner-flink/#comments" itemprop="discussionUrl">
+                <a href="/2017/08/30/tensorflow-on-spark-standalone/#comments" itemprop="discussionUrl">
                   <span class="post-comments-count disqus-comment-count"
-                        data-disqus-identifier="2017/06/08/beam-2-0-0-runner-flink/" itemprop="commentCount"></span>
+                        data-disqus-identifier="2017/08/30/tensorflow-on-spark-standalone/" itemprop="commentCount"></span>
                 </a>
               </span>
             
@@ -360,7 +360,7 @@
 
           
           
-             <span id="/2017/06/08/beam-2-0-0-runner-flink/" class="leancloud_visitors" data-flag-title="Apache Beam Runner - Flink">
+             <span id="/2017/08/30/tensorflow-on-spark-standalone/" class="leancloud_visitors" data-flag-title="Spark集成TensorflowOnSpark standalone模式下测试mnist">
                <span class="post-meta-divider">|</span>
                <span class="post-meta-item-icon">
                  <i class="fa fa-eye"></i>
@@ -388,24 +388,19 @@
       
 
       
-        <h2 id="使用Flink-Runner先决条件及步骤"><a href="#使用Flink-Runner先决条件及步骤" class="headerlink" title="使用Flink Runner先决条件及步骤"></a>使用Flink Runner先决条件及步骤</h2><h3 id="检查apache-beam对应版本所需要的flink版本"><a href="#检查apache-beam对应版本所需要的flink版本" class="headerlink" title="检查apache beam对应版本所需要的flink版本"></a>检查apache beam对应版本所需要的flink版本</h3><p>方式一：(推荐)<br>github上查找beam项目，找到指定版本的flink runner的pom.xml文件，检查flink.version版本<br><a href="https://github.com/apache/beam/blob/v2.0.0/runners/flink/pom.xml" target="_blank" rel="external">https://github.com/apache/beam/blob/v2.0.0/runners/flink/pom.xml</a><br><figure class="highlight xml"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="tag">&lt;<span class="name">properties</span>&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="name">flink.version</span>&gt;</span>1.2.1<span class="tag">&lt;/<span class="name">flink.version</span>&gt;</span></div><div class="line"><span class="tag">&lt;/<span class="name">properties</span>&gt;</span></div></pre></td></tr></table></figure></p>
-<p>方式二：<br>官方所说的通过mvn命令查询支持的flink版本<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">$ mvn dependency:tree -Pflink-runner |grep flink</div><div class="line">...</div><div class="line">[INFO] |  +- org.apache.flink:flink-streaming-java_2.10:jar:1.1.2:runtime</div><div class="line">...</div></pre></td></tr></table></figure></p>
-<a id="more"></a>
-<h3 id="下载，安装flink"><a href="#下载，安装flink" class="headerlink" title="下载，安装flink"></a>下载，安装flink</h3><h4 id="下载链接："><a href="#下载链接：" class="headerlink" title="下载链接："></a>下载链接：</h4><p><a href="http://archive.apache.org/dist/flink/flink-1.2.1/flink-1.2.1-bin-hadoop24-scala_2.10.tgz" target="_blank" rel="external">flink-1.2.1-bin-hadoop24-scala_2.10.tgz</a></p>
-<h4 id="安装"><a href="#安装" class="headerlink" title="安装"></a>安装</h4><p>flink安装可以参考官方的<a href="https://ci.apache.org/projects/flink/flink-docs-release-1.3/quickstart/setup_quickstart.html" target="_blank" rel="external">QuickStart</a>文档进行安装(测试只需要安装local模式)。</p>
-<h2 id="引入maven依赖"><a href="#引入maven依赖" class="headerlink" title="引入maven依赖"></a>引入maven依赖</h2><p>使用java作为开发语言，需要在项目的pom.xml文件中加入此依赖<br><figure class="highlight xml"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></div><div class="line">  <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.apache.beam<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></div><div class="line">  <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>beam-runners-flink_2.10<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></div><div class="line">  <span class="tag">&lt;<span class="name">version</span>&gt;</span>2.0.0<span class="tag">&lt;/<span class="name">version</span>&gt;</span></div><div class="line">  <span class="tag">&lt;<span class="name">scope</span>&gt;</span>runtime<span class="tag">&lt;/<span class="name">scope</span>&gt;</span></div><div class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></div></pre></td></tr></table></figure></p>
-<h2 id="使用flink-runner执行pipeline"><a href="#使用flink-runner执行pipeline" class="headerlink" title="使用flink runner执行pipeline"></a>使用flink runner执行pipeline</h2><p>apache beam使用flink runner通过-P指定<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ mvn package -Pflink-runner</div></pre></td></tr></table></figure></p>
-<p>下面是官方给的一个例子<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">$ mvn <span class="built_in">exec</span>:java -Dexec.mainClass=org.apache.beam.examples.WordCount \</div><div class="line">    -Pflink-runner \</div><div class="line">    -Dexec.args=<span class="string">"--runner=FlinkRunner \</span></div><div class="line">      --inputFile=/path/to/pom.xml \</div><div class="line">      --output=/path/to/counts \</div><div class="line">      --flinkMaster=&lt;flink master url&gt; \</div><div class="line">      --filesToStage=target/word-count-beam--bundled-0.1.jar"</div></pre></td></tr></table></figure></p>
-<p>注：<br>–flinkMaster:指定flink jobmanager访问地址，本地模式为localhost:6123;<br>–filesToStage:指定运行的jar包<br>以下两个参数为pipeline options提供给flink runner的内置参数，更多内置参数请点击<a href="https://beam.apache.org/documentation/runners/flink/" target="_blank" rel="external">这里</a>查阅   </p>
-<h2 id="遇到的问题"><a href="#遇到的问题" class="headerlink" title="遇到的问题"></a>遇到的问题</h2><h3 id="依赖包"><a href="#依赖包" class="headerlink" title="依赖包"></a>依赖包</h3><p>将以下以来包放入flink lib目录下<br><div class="note info"><p> beam-runners-flink_2.10-2.0.0.jar<br>beam-sdks-java-core-2.0.0.jar<br>beam-sdks-java-io-kafka-2.0.0.jar<br>kafka-clients-0.10.1.0.jar<br>kafka_2.10-0.8.2.2.jar<br>beam-runners-core-java-2.0.0.jar<br>spring-core-4.3.6.RELEASE.jar<br>spring-expression-4.3.6.RELEASE.jar </p>
-</div></p>
-<h3 id="问题：apache-beam-2-0-0与apache-flink1-3-0版本问题"><a href="#问题：apache-beam-2-0-0与apache-flink1-3-0版本问题" class="headerlink" title="问题：apache beam 2.0.0与apache flink1.3.0版本问题"></a>问题：apache beam 2.0.0与apache flink1.3.0版本问题</h3><p>apache beam 2.0.0的runner flink是基于flink 1.2.1版本编译的，而flink1.3.0版本删除了JobSnapshottingSettings类，导致用flink1.3.0运行的时候抛ClassNotFoundException异常。<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">java.lang.ClassNotFoundException: org.apache.flink.runtime.jobgraph.tasks.JobSnapshottingSettings</div><div class="line">    at java.net.URLClassLoader.findClass(URLClassLoader.java:<span class="number">381</span>)</div><div class="line">    at java.lang.ClassLoader.loadClass(ClassLoader.java:<span class="number">424</span>)</div><div class="line">    at sun.misc.Launcher$AppClassLoader.loadClass(Launcher.java:<span class="number">331</span>)</div><div class="line">    ... (省略部分日志)</div></pre></td></tr></table></figure></p>
-<p>解决方法：</p>
-<ul>
-<li>如果想使用最新的flink1.3.0，建议直接从github下载源码自行编译，目前apache beam的master分支已经是采用flink1.3.0版本。</li>
-<li>采用flink1.2.1版本运行程序</li>
-</ul>
-<p>参考链接：<br><a href="https://beam.apache.org/documentation/runners/flink/" target="_blank" rel="external">https://beam.apache.org/documentation/runners/flink/</a><br><a href="https://github.com/apache/beam/blob/v2.0.0/runners/flink/pom.xml" target="_blank" rel="external">https://github.com/apache/beam/blob/v2.0.0/runners/flink/pom.xml</a></p>
+        <h1 id="预先条件"><a href="#预先条件" class="headerlink" title="预先条件"></a>预先条件</h1><p>安装tensorflow环境</p>
+<h1 id="下载tensorflowonspark代码"><a href="#下载tensorflowonspark代码" class="headerlink" title="下载tensorflowonspark代码"></a>下载tensorflowonspark代码</h1><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">git <span class="built_in">clone</span> https://github.com/yahoo/TensorFlowOnSpark.git</div><div class="line"><span class="built_in">cd</span> TensorFlowOnSpark</div><div class="line"><span class="built_in">export</span> TFoS_HOME=$(<span class="built_in">pwd</span>)</div></pre></td></tr></table></figure>
+<p>#安装Spark<br>这里tensorflowOnSpark中提供了一个脚本用于下载spark，我们直接执行这个命令。<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="variable">$&#123;TFoS_HOME&#125;</span>/scripts/<span class="built_in">local</span>-setup-spark.sh</div><div class="line">rm spark-1.6.0-bin-hadoop2.6.tar</div><div class="line"><span class="built_in">export</span> SPARK_HOME=$(<span class="built_in">pwd</span>)/spark-1.6.0-bin-hadoop2.6</div><div class="line"><span class="built_in">export</span> PATH=<span class="variable">$&#123;SPARK_HOME&#125;</span>/bin:<span class="variable">$&#123;PATH&#125;</span></div></pre></td></tr></table></figure></p>
+<p>#安装tensorflow以及tensorflowOnSpark<br>这里我们通过pip命令来安装tensorflow以及tensorflowOnSpark，目前最新版本的tensorflow是1.2.x，不过我这边测试是用的0.12.1版本。安装指定tensorflow版本可以通过==${version}来指定。<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">sudo pip install tensorflow==0.12.1</div><div class="line">sudo pip install tensorflowonspark</div></pre></td></tr></table></figure></p>
+<p>#下载mnist数据<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">mkdir $&#123;TFoS_HOME&#125;/mnist</div><div class="line">pushd $&#123;TFoS_HOME&#125;/mnist</div><div class="line">curl -O &quot;http://yann.lecun.com/exdb/mnist/train-images-idx3-ubyte.gz&quot;</div><div class="line">curl -O &quot;http://yann.lecun.com/exdb/mnist/train-labels-idx1-ubyte.gz&quot;</div><div class="line">curl -O &quot;http://yann.lecun.com/exdb/mnist/t10k-images-idx3-ubyte.gz&quot;</div><div class="line">curl -O &quot;http://yann.lecun.com/exdb/mnist/t10k-labels-idx1-ubyte.gz&quot;</div><div class="line">popd</div></pre></td></tr></table></figure></p>
+<p>#运行standalone spark集群<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">export MASTER=spark://$(hostname):7077</div><div class="line">export SPARK_WORKER_INSTANCES=2</div><div class="line">export CORES_PER_WORKER=1 </div><div class="line">export TOTAL_CORES=$(($&#123;CORES_PER_WORKER&#125;*$&#123;SPARK_WORKER_INSTANCES&#125;)) </div><div class="line">$&#123;SPARK_HOME&#125;/sbin/start-master.sh; $&#123;SPARK_HOME&#125;/sbin/start-slave.sh -c $CORES_PER_WORKER -m 3G $&#123;MASTER&#125;</div></pre></td></tr></table></figure></p>
+<p>#测试pyspark、tensorflow以及tensorflowOnSpark<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">pyspark</div><div class="line">&gt;&gt;&gt; import tensorflow as tf</div><div class="line">&gt;&gt;&gt; from tensorflowonspark import TFCluster</div><div class="line">&gt;&gt;&gt; exit()</div></pre></td></tr></table></figure></p>
+<p>#使用spark转换mnist压缩文件<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">cd $&#123;TFoS_HOME&#125;</div><div class="line"># rm -rf examples/mnist/csv</div><div class="line">$&#123;SPARK_HOME&#125;/bin/spark-submit \</div><div class="line">--master $&#123;MASTER&#125; \</div><div class="line">$&#123;TFoS_HOME&#125;/examples/mnist/mnist_data_setup.py \</div><div class="line">--output examples/mnist/csv \</div><div class="line">--format csv</div><div class="line">ls -lR examples/mnist/csv</div></pre></td></tr></table></figure></p>
+<p>#运行分布式mnist训练（使用feed_dict）<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div></pre></td><td class="code"><pre><div class="line"># rm -rf mnist_model</div><div class="line">$&#123;SPARK_HOME&#125;/bin/spark-submit \</div><div class="line">--master $&#123;MASTER&#125; \</div><div class="line">--py-files $&#123;TFoS_HOME&#125;/examples/mnist/spark/mnist_dist.py \</div><div class="line">--conf spark.cores.max=$&#123;TOTAL_CORES&#125; \</div><div class="line">--conf spark.task.cpus=$&#123;CORES_PER_WORKER&#125; \</div><div class="line">--conf spark.executorEnv.JAVA_HOME=&quot;$JAVA_HOME&quot; \</div><div class="line">$&#123;TFoS_HOME&#125;/examples/mnist/spark/mnist_spark.py \</div><div class="line">--cluster_size $&#123;SPARK_WORKER_INSTANCES&#125; \</div><div class="line">--images examples/mnist/csv/train/images \</div><div class="line">--labels examples/mnist/csv/train/labels \</div><div class="line">--format csv \</div><div class="line">--mode train \</div><div class="line">--model mnist_model</div><div class="line"></div><div class="line">ls -l mnist_model</div></pre></td></tr></table></figure></p>
+<p>#运行分布式mnist推论（使用feed_dict）<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div></pre></td><td class="code"><pre><div class="line"># rm -rf predictions</div><div class="line">$&#123;SPARK_HOME&#125;/bin/spark-submit \</div><div class="line">--master $&#123;MASTER&#125; \</div><div class="line">--py-files $&#123;TFoS_HOME&#125;/examples/mnist/spark/mnist_dist.py \</div><div class="line">--conf spark.cores.max=$&#123;TOTAL_CORES&#125; \</div><div class="line">--conf spark.task.cpus=$&#123;CORES_PER_WORKER&#125; \</div><div class="line">--conf spark.executorEnv.JAVA_HOME=&quot;$JAVA_HOME&quot; \</div><div class="line">$&#123;TFoS_HOME&#125;/examples/mnist/spark/mnist_spark.py \</div><div class="line">--cluster_size $&#123;SPARK_WORKER_INSTANCES&#125; \</div><div class="line">--images examples/mnist/csv/test/images \</div><div class="line">--labels examples/mnist/csv/test/labels \</div><div class="line">--mode inference \</div><div class="line">--format csv \</div><div class="line">--model mnist_model \</div><div class="line">--output predictions</div><div class="line"></div><div class="line">less predictions/part-00000</div></pre></td></tr></table></figure></p>
+<p>预测结果如下所示：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line">2017-02-10T23:29:17.009563 Label: 7, Prediction: 7</div><div class="line">2017-02-10T23:29:17.009677 Label: 2, Prediction: 2</div><div class="line">2017-02-10T23:29:17.009721 Label: 1, Prediction: 1</div><div class="line">2017-02-10T23:29:17.009761 Label: 0, Prediction: 0</div><div class="line">2017-02-10T23:29:17.009799 Label: 4, Prediction: 4</div><div class="line">2017-02-10T23:29:17.009838 Label: 1, Prediction: 1</div><div class="line">2017-02-10T23:29:17.009876 Label: 4, Prediction: 4</div><div class="line">2017-02-10T23:29:17.009914 Label: 9, Prediction: 9</div><div class="line">2017-02-10T23:29:17.009951 Label: 5, Prediction: 6</div><div class="line">2017-02-10T23:29:17.009989 Label: 9, Prediction: 9</div><div class="line">2017-02-10T23:29:17.010026 Label: 0, Prediction: 0</div></pre></td></tr></table></figure></p>
+<p>#关闭spark集群<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$&#123;SPARK_HOME&#125;/sbin/stop-slave.sh; $&#123;SPARK_HOME&#125;/sbin/stop-master.sh</div></pre></td></tr></table></figure></p>
+<p>原链接：<br><a href="https://github.com/yahoo/TensorFlowOnSpark/wiki/GetStarted_standalone" target="_blank" rel="external">https://github.com/yahoo/TensorFlowOnSpark/wiki/GetStarted_standalone</a></p>
 
       
     </div>
@@ -451,9 +446,11 @@
       
         <div class="post-tags">
           
-            <a href="/tags/apache-beam/" rel="tag"># apache beam</a>
+            <a href="/tags/tensorflow/" rel="tag"># tensorflow</a>
           
-            <a href="/tags/apache-flink/" rel="tag"># apache flink</a>
+            <a href="/tags/spark/" rel="tag"># spark</a>
+          
+            <a href="/tags/standalone/" rel="tag"># standalone</a>
           
         </div>
       
@@ -466,8 +463,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2017/06/02/apache-beam-protable-and-parallel-data-processing/" rel="next" title="Apache Beam:便携式并行数据处理">
-                <i class="fa fa-chevron-left"></i> Apache Beam:便携式并行数据处理
+              <a href="/2017/08/30/AI-Chat-Bot-in-Python-with-AIML/" rel="next" title="使用aiml开发智能聊天机器人">
+                <i class="fa fa-chevron-left"></i> 使用aiml开发智能聊天机器人
               </a>
             
           </div>
@@ -475,10 +472,6 @@
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
-            
-              <a href="/2017/06/09/apache-beam-kafka-io-sample/" rel="prev" title="Apache Beam IO - KafkaIO">
-                Apache Beam IO - KafkaIO <i class="fa fa-chevron-right"></i>
-              </a>
             
           </div>
         </div>
@@ -632,7 +625,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#使用Flink-Runner先决条件及步骤"><span class="nav-number">1.</span> <span class="nav-text">使用Flink Runner先决条件及步骤</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#检查apache-beam对应版本所需要的flink版本"><span class="nav-number">1.1.</span> <span class="nav-text">检查apache beam对应版本所需要的flink版本</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#下载，安装flink"><span class="nav-number">1.2.</span> <span class="nav-text">下载，安装flink</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#下载链接："><span class="nav-number">1.2.1.</span> <span class="nav-text">下载链接：</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#安装"><span class="nav-number">1.2.2.</span> <span class="nav-text">安装</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#引入maven依赖"><span class="nav-number">2.</span> <span class="nav-text">引入maven依赖</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#使用flink-runner执行pipeline"><span class="nav-number">3.</span> <span class="nav-text">使用flink runner执行pipeline</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#遇到的问题"><span class="nav-number">4.</span> <span class="nav-text">遇到的问题</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#依赖包"><span class="nav-number">4.1.</span> <span class="nav-text">依赖包</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#问题：apache-beam-2-0-0与apache-flink1-3-0版本问题"><span class="nav-number">4.2.</span> <span class="nav-text">问题：apache beam 2.0.0与apache flink1.3.0版本问题</span></a></li></ol></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#预先条件"><span class="nav-number">1.</span> <span class="nav-text">预先条件</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#下载tensorflowonspark代码"><span class="nav-number">2.</span> <span class="nav-text">下载tensorflowonspark代码</span></a></li></ol></div>
             
 
           </div>
@@ -775,9 +768,9 @@
     
       <script type="text/javascript">
         var disqus_config = function () {
-          this.page.url = 'http://yoursite.com/2017/06/08/beam-2-0-0-runner-flink/';
-          this.page.identifier = '2017/06/08/beam-2-0-0-runner-flink/';
-          this.page.title = 'Apache Beam Runner - Flink';
+          this.page.url = 'http://yoursite.com/2017/08/30/tensorflow-on-spark-standalone/';
+          this.page.identifier = '2017/08/30/tensorflow-on-spark-standalone/';
+          this.page.title = 'Spark集成TensorflowOnSpark standalone模式下测试mnist';
         };
         var d = document, s = d.createElement('script');
         s.src = 'https://weijiyonglover.disqus.com/embed.js';

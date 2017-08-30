@@ -277,6 +277,174 @@
   
 
   <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/08/30/tensorflow-on-spark-standalone/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Jonathan.Wei">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/headportrait.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Jonathan.Wei's Notes">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2017/08/30/tensorflow-on-spark-standalone/" itemprop="url">Spark集成TensorflowOnSpark standalone模式下测试mnist</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-08-30T17:06:01+08:00">
+                2017-08-30
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/tensorflow/" itemprop="url" rel="index">
+                    <span itemprop="name">tensorflow</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2017/08/30/tensorflow-on-spark-standalone/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count disqus-comment-count"
+                        data-disqus-identifier="2017/08/30/tensorflow-on-spark-standalone/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+             <span id="/2017/08/30/tensorflow-on-spark-standalone/" class="leancloud_visitors" data-flag-title="Spark集成TensorflowOnSpark standalone模式下测试mnist">
+               <span class="post-meta-divider">|</span>
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               
+                 <span class="post-meta-item-text">阅读次数 </span>
+               
+                 <span class="leancloud-visitors-count"></span>
+             </span>
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h1 id="预先条件"><a href="#预先条件" class="headerlink" title="预先条件"></a>预先条件</h1><p>安装tensorflow环境</p>
+<h1 id="下载tensorflowonspark代码"><a href="#下载tensorflowonspark代码" class="headerlink" title="下载tensorflowonspark代码"></a>下载tensorflowonspark代码</h1><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">git <span class="built_in">clone</span> https://github.com/yahoo/TensorFlowOnSpark.git</div><div class="line"><span class="built_in">cd</span> TensorFlowOnSpark</div><div class="line"><span class="built_in">export</span> TFoS_HOME=$(<span class="built_in">pwd</span>)</div></pre></td></tr></table></figure>
+<p>#安装Spark<br>这里tensorflowOnSpark中提供了一个脚本用于下载spark，我们直接执行这个命令。<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="variable">$&#123;TFoS_HOME&#125;</span>/scripts/<span class="built_in">local</span>-setup-spark.sh</div><div class="line">rm spark-1.6.0-bin-hadoop2.6.tar</div><div class="line"><span class="built_in">export</span> SPARK_HOME=$(<span class="built_in">pwd</span>)/spark-1.6.0-bin-hadoop2.6</div><div class="line"><span class="built_in">export</span> PATH=<span class="variable">$&#123;SPARK_HOME&#125;</span>/bin:<span class="variable">$&#123;PATH&#125;</span></div></pre></td></tr></table></figure></p>
+<p>#安装tensorflow以及tensorflowOnSpark<br>这里我们通过pip命令来安装tensorflow以及tensorflowOnSpark，目前最新版本的tensorflow是1.2.x，不过我这边测试是用的0.12.1版本。安装指定tensorflow版本可以通过==${version}来指定。<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">sudo pip install tensorflow==0.12.1</div><div class="line">sudo pip install tensorflowonspark</div></pre></td></tr></table></figure></p>
+<p>#下载mnist数据<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">mkdir $&#123;TFoS_HOME&#125;/mnist</div><div class="line">pushd $&#123;TFoS_HOME&#125;/mnist</div><div class="line">curl -O &quot;http://yann.lecun.com/exdb/mnist/train-images-idx3-ubyte.gz&quot;</div><div class="line">curl -O &quot;http://yann.lecun.com/exdb/mnist/train-labels-idx1-ubyte.gz&quot;</div><div class="line">curl -O &quot;http://yann.lecun.com/exdb/mnist/t10k-images-idx3-ubyte.gz&quot;</div><div class="line">curl -O &quot;http://yann.lecun.com/exdb/mnist/t10k-labels-idx1-ubyte.gz&quot;</div><div class="line">popd</div></pre></td></tr></table></figure></p>
+<p>#运行standalone spark集群<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">export MASTER=spark://$(hostname):7077</div><div class="line">export SPARK_WORKER_INSTANCES=2</div><div class="line">export CORES_PER_WORKER=1 </div><div class="line">export TOTAL_CORES=$(($&#123;CORES_PER_WORKER&#125;*$&#123;SPARK_WORKER_INSTANCES&#125;)) </div><div class="line">$&#123;SPARK_HOME&#125;/sbin/start-master.sh; $&#123;SPARK_HOME&#125;/sbin/start-slave.sh -c $CORES_PER_WORKER -m 3G $&#123;MASTER&#125;</div></pre></td></tr></table></figure></p>
+<p>#测试pyspark、tensorflow以及tensorflowOnSpark<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">pyspark</div><div class="line">&gt;&gt;&gt; import tensorflow as tf</div><div class="line">&gt;&gt;&gt; from tensorflowonspark import TFCluster</div><div class="line">&gt;&gt;&gt; exit()</div></pre></td></tr></table></figure></p>
+<p>#使用spark转换mnist压缩文件<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">cd $&#123;TFoS_HOME&#125;</div><div class="line"># rm -rf examples/mnist/csv</div><div class="line">$&#123;SPARK_HOME&#125;/bin/spark-submit \</div><div class="line">--master $&#123;MASTER&#125; \</div><div class="line">$&#123;TFoS_HOME&#125;/examples/mnist/mnist_data_setup.py \</div><div class="line">--output examples/mnist/csv \</div><div class="line">--format csv</div><div class="line">ls -lR examples/mnist/csv</div></pre></td></tr></table></figure></p>
+<p>#运行分布式mnist训练（使用feed_dict）<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div></pre></td><td class="code"><pre><div class="line"># rm -rf mnist_model</div><div class="line">$&#123;SPARK_HOME&#125;/bin/spark-submit \</div><div class="line">--master $&#123;MASTER&#125; \</div><div class="line">--py-files $&#123;TFoS_HOME&#125;/examples/mnist/spark/mnist_dist.py \</div><div class="line">--conf spark.cores.max=$&#123;TOTAL_CORES&#125; \</div><div class="line">--conf spark.task.cpus=$&#123;CORES_PER_WORKER&#125; \</div><div class="line">--conf spark.executorEnv.JAVA_HOME=&quot;$JAVA_HOME&quot; \</div><div class="line">$&#123;TFoS_HOME&#125;/examples/mnist/spark/mnist_spark.py \</div><div class="line">--cluster_size $&#123;SPARK_WORKER_INSTANCES&#125; \</div><div class="line">--images examples/mnist/csv/train/images \</div><div class="line">--labels examples/mnist/csv/train/labels \</div><div class="line">--format csv \</div><div class="line">--mode train \</div><div class="line">--model mnist_model</div><div class="line"></div><div class="line">ls -l mnist_model</div></pre></td></tr></table></figure></p>
+<p>#运行分布式mnist推论（使用feed_dict）<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div></pre></td><td class="code"><pre><div class="line"># rm -rf predictions</div><div class="line">$&#123;SPARK_HOME&#125;/bin/spark-submit \</div><div class="line">--master $&#123;MASTER&#125; \</div><div class="line">--py-files $&#123;TFoS_HOME&#125;/examples/mnist/spark/mnist_dist.py \</div><div class="line">--conf spark.cores.max=$&#123;TOTAL_CORES&#125; \</div><div class="line">--conf spark.task.cpus=$&#123;CORES_PER_WORKER&#125; \</div><div class="line">--conf spark.executorEnv.JAVA_HOME=&quot;$JAVA_HOME&quot; \</div><div class="line">$&#123;TFoS_HOME&#125;/examples/mnist/spark/mnist_spark.py \</div><div class="line">--cluster_size $&#123;SPARK_WORKER_INSTANCES&#125; \</div><div class="line">--images examples/mnist/csv/test/images \</div><div class="line">--labels examples/mnist/csv/test/labels \</div><div class="line">--mode inference \</div><div class="line">--format csv \</div><div class="line">--model mnist_model \</div><div class="line">--output predictions</div><div class="line"></div><div class="line">less predictions/part-00000</div></pre></td></tr></table></figure></p>
+<p>预测结果如下所示：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line">2017-02-10T23:29:17.009563 Label: 7, Prediction: 7</div><div class="line">2017-02-10T23:29:17.009677 Label: 2, Prediction: 2</div><div class="line">2017-02-10T23:29:17.009721 Label: 1, Prediction: 1</div><div class="line">2017-02-10T23:29:17.009761 Label: 0, Prediction: 0</div><div class="line">2017-02-10T23:29:17.009799 Label: 4, Prediction: 4</div><div class="line">2017-02-10T23:29:17.009838 Label: 1, Prediction: 1</div><div class="line">2017-02-10T23:29:17.009876 Label: 4, Prediction: 4</div><div class="line">2017-02-10T23:29:17.009914 Label: 9, Prediction: 9</div><div class="line">2017-02-10T23:29:17.009951 Label: 5, Prediction: 6</div><div class="line">2017-02-10T23:29:17.009989 Label: 9, Prediction: 9</div><div class="line">2017-02-10T23:29:17.010026 Label: 0, Prediction: 0</div></pre></td></tr></table></figure></p>
+<p>#关闭spark集群<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$&#123;SPARK_HOME&#125;/sbin/stop-slave.sh; $&#123;SPARK_HOME&#125;/sbin/stop-master.sh</div></pre></td></tr></table></figure></p>
+<p>原链接：<br><a href="https://github.com/yahoo/TensorFlowOnSpark/wiki/GetStarted_standalone" target="_blank" rel="external">https://github.com/yahoo/TensorFlowOnSpark/wiki/GetStarted_standalone</a></p>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/08/30/AI-Chat-Bot-in-Python-with-AIML/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1780,7 +1948,7 @@
           
             <div class="site-state-item site-state-posts">
               <a href="/archives">
-                <span class="site-state-item-count">9</span>
+                <span class="site-state-item-count">10</span>
                 <span class="site-state-item-name">日志</span>
               </a>
             </div>
@@ -1791,7 +1959,7 @@
             
             <div class="site-state-item site-state-categories">
               <a href="/categories/index.html">
-                <span class="site-state-item-count">4</span>
+                <span class="site-state-item-count">5</span>
                 <span class="site-state-item-name">分类</span>
               </a>
             </div>
@@ -1802,7 +1970,7 @@
             
             <div class="site-state-item site-state-tags">
               <a href="/tags/index.html">
-                <span class="site-state-item-count">9</span>
+                <span class="site-state-item-count">12</span>
                 <span class="site-state-item-name">标签</span>
               </a>
             </div>
