@@ -78,7 +78,7 @@
 <link href="/css/main.css?v=5.1.1" rel="stylesheet" type="text/css" />
 
 
-  <meta name="keywords" content="Hello," />
+  <meta name="keywords" content="apache beam," />
 
 
 
@@ -96,17 +96,17 @@
 
 
 
-<meta name="description" content="Welcome to Hexo! This is your very first post. Check documentation for more info. If you get any problems when using Hexo, you can find the answer in troubleshooting or you can ask me on GitHub. Quick">
-<meta name="keywords" content="Hello">
+<meta name="description" content="Beam程序从头到尾表达了一个数据处理流程。这里介绍在Beam SDK中使用类构建管道的机制。要使用Beam SDK中的类构建管道，您的程序将需要执行以下一般步骤：  创建一个Pipeline对象 使用Read或者Create转换去为管道数据创建一个或多个PCollections 应用Transforms到每个PCollection.Transforms可以对PCollection中的每个元素进行">
+<meta name="keywords" content="apache beam">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Hello World">
-<meta property="og:url" content="http://yoursite.com/2017/05/02/hello-world/index.html">
+<meta property="og:title" content="Apache beam - 创建Pipeline">
+<meta property="og:url" content="http://yoursite.com/2017/06/16/create-your-pipeline/index.html">
 <meta property="og:site_name" content="Jonathan.Wei&#39;s Notes">
-<meta property="og:description" content="Welcome to Hexo! This is your very first post. Check documentation for more info. If you get any problems when using Hexo, you can find the answer in troubleshooting or you can ask me on GitHub. Quick">
-<meta property="og:updated_time" content="2017-06-02T08:43:25.000Z">
+<meta property="og:description" content="Beam程序从头到尾表达了一个数据处理流程。这里介绍在Beam SDK中使用类构建管道的机制。要使用Beam SDK中的类构建管道，您的程序将需要执行以下一般步骤：  创建一个Pipeline对象 使用Read或者Create转换去为管道数据创建一个或多个PCollections 应用Transforms到每个PCollection.Transforms可以对PCollection中的每个元素进行">
+<meta property="og:updated_time" content="2017-06-23T01:50:40.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Hello World">
-<meta name="twitter:description" content="Welcome to Hexo! This is your very first post. Check documentation for more info. If you get any problems when using Hexo, you can find the answer in troubleshooting or you can ask me on GitHub. Quick">
+<meta name="twitter:title" content="Apache beam - 创建Pipeline">
+<meta name="twitter:description" content="Beam程序从头到尾表达了一个数据处理流程。这里介绍在Beam SDK中使用类构建管道的机制。要使用Beam SDK中的类构建管道，您的程序将需要执行以下一般步骤：  创建一个Pipeline对象 使用Read或者Create转换去为管道数据创建一个或多个PCollections 应用Transforms到每个PCollection.Transforms可以对PCollection中的每个元素进行">
 
 
 
@@ -134,13 +134,13 @@
 
 
 
-  <link rel="canonical" href="http://yoursite.com/2017/05/02/hello-world/"/>
+  <link rel="canonical" href="http://yoursite.com/2017/06/16/create-your-pipeline/"/>
 
 
 
 
 
-  <title>Hello World | Jonathan.Wei's Notes</title>
+  <title>Apache beam - 创建Pipeline | Jonathan.Wei's Notes</title>
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
@@ -280,7 +280,7 @@
   
 
   <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/05/02/hello-world/">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/06/16/create-your-pipeline/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="Jonathan.Wei">
@@ -297,7 +297,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">Hello World</h1>
+          <h1 class="post-title" itemprop="name headline">Apache beam - 创建Pipeline</h1>
         
 
         <div class="post-meta">
@@ -309,8 +309,8 @@
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-05-02T16:23:12+08:00">
-                2017-05-02
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-06-16T17:29:49+08:00">
+                2017-06-16
               </time>
             
 
@@ -332,8 +332,8 @@
               
               
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Testing/" itemprop="url" rel="index">
-                    <span itemprop="name">Testing</span>
+                  <a href="/categories/apache-beam/" itemprop="url" rel="index">
+                    <span itemprop="name">apache beam</span>
                   </a>
                 </span>
 
@@ -350,9 +350,9 @@
                 <span class="post-meta-item-icon">
                   <i class="fa fa-comment-o"></i>
                 </span>
-                <a href="/2017/05/02/hello-world/#comments" itemprop="discussionUrl">
+                <a href="/2017/06/16/create-your-pipeline/#comments" itemprop="discussionUrl">
                   <span class="post-comments-count disqus-comment-count"
-                        data-disqus-identifier="2017/05/02/hello-world/" itemprop="commentCount"></span>
+                        data-disqus-identifier="2017/06/16/create-your-pipeline/" itemprop="commentCount"></span>
                 </a>
               </span>
             
@@ -360,7 +360,7 @@
 
           
           
-             <span id="/2017/05/02/hello-world/" class="leancloud_visitors" data-flag-title="Hello World">
+             <span id="/2017/06/16/create-your-pipeline/" class="leancloud_visitors" data-flag-title="Apache beam - 创建Pipeline">
                <span class="post-meta-divider">|</span>
                <span class="post-meta-item-icon">
                  <i class="fa fa-eye"></i>
@@ -388,15 +388,31 @@
       
 
       
-        <p>Welcome to <a href="https://hexo.io/" target="_blank" rel="external">Hexo</a>! This is your very first post. Check <a href="https://hexo.io/docs/" target="_blank" rel="external">documentation</a> for more info. If you get any problems when using Hexo, you can find the answer in <a href="https://hexo.io/docs/troubleshooting.html" target="_blank" rel="external">troubleshooting</a> or you can ask me on <a href="https://github.com/hexojs/hexo/issues" target="_blank" rel="external">GitHub</a>.</p>
-<h2 id="Quick-Start"><a href="#Quick-Start" class="headerlink" title="Quick Start"></a>Quick Start</h2><h3 id="Create-a-new-post"><a href="#Create-a-new-post" class="headerlink" title="Create a new post"></a>Create a new post</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ hexo new <span class="string">"My New Post"</span></div></pre></td></tr></table></figure>
-<p>More info: <a href="https://hexo.io/docs/writing.html" target="_blank" rel="external">Writing</a><br><a id="more"></a></p>
-<h3 id="Run-server"><a href="#Run-server" class="headerlink" title="Run server"></a>Run server</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ hexo server</div></pre></td></tr></table></figure>
-<p>More info: <a href="https://hexo.io/docs/server.html" target="_blank" rel="external">Server</a></p>
-<h3 id="Generate-static-files"><a href="#Generate-static-files" class="headerlink" title="Generate static files"></a>Generate static files</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ hexo generate</div></pre></td></tr></table></figure>
-<p>More info: <a href="https://hexo.io/docs/generating.html" target="_blank" rel="external">Generating</a></p>
-<h3 id="Deploy-to-remote-sites"><a href="#Deploy-to-remote-sites" class="headerlink" title="Deploy to remote sites"></a>Deploy to remote sites</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ hexo deploy</div></pre></td></tr></table></figure>
-<p>More info: <a href="https://hexo.io/docs/deployment.html" target="_blank" rel="external">Deployment</a></p>
+        <p>Beam程序从头到尾表达了一个数据处理流程。这里介绍在Beam SDK中使用类构建管道的机制。要使用Beam SDK中的类构建管道，您的程序将需要执行以下一般步骤：</p>
+<ul>
+<li>创建一个<strong><em>Pipeline</em></strong>对象</li>
+<li>使用<strong><em>Read</em></strong>或者<strong><em>Create</em></strong>转换去为管道数据创建一个或多个<strong><em>PCollections</em></strong></li>
+<li>应用Transforms到每个PCollection.Transforms可以对PCollection中的每个元素进行修改，过滤，分组，解析以及其他处理</li>
+<li>最后使用Write或者其他输出方式，完成PCollection的转换</li>
+<li>运行Pipeline<a id="more"></a>
+<h2 id="创建Pipeline对象"><a href="#创建Pipeline对象" class="headerlink" title="创建Pipeline对象"></a>创建Pipeline对象</h2><div class="note info"><p> 一个beam程序通常从创建Pipeline对象开始<br>在Beam SDK中，一个Pipeline都以明确的类型对象表示Pipeline。每个Pipeline对象是一个独立的实体。它封装了Pipeline运行的数据和应用于该数据的转换。</p>
+</div>
+创建一个Pipeline，需要声明一个Pipeline对象，并通过它传递一些配置参数。<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// Start by defining the options for the pipeline.</span></div><div class="line">PipelineOptions options = PipelineOptionsFactory.create();</div><div class="line"></div><div class="line"><span class="comment">// Then create the pipeline.</span></div><div class="line">Pipeline p = Pipeline.create(options);</div></pre></td></tr></table></figure>
+</li>
+</ul>
+<h2 id="将数据读取进管道"><a href="#将数据读取进管道" class="headerlink" title="将数据读取进管道"></a>将数据读取进管道</h2><div class="note info"><p> 创建Pipeline并初始化PCollection，应用root转换到pipeline对象。一个root转换从外部数据源或指定的某些本地数据创建一个PCollection。<br>Beam SDK包含两种root转换：Read和Create。Read转换从外部数据(例如文本文件或数据库表)源读取数据。Create转换从java.util.Collection内存创建一个PCollection</p>
+</div>
+<p>以下示例代码显示了如何apply的TextIO.Read root转换从文本文件中读取数据。该转换应用于一个Pipeline对象p，并返回一个类型为PCollection<string>的流水线数据集<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">PCollection&lt;String&gt; lines = p.apply(</div><div class="line">  <span class="string">"ReadLines"</span>, TextIO.read().from(<span class="string">"gs://some/inputData.txt"</span>));</div></pre></td></tr></table></figure></string></p>
+<h2 id="应用转换处理Pipeline数据"><a href="#应用转换处理Pipeline数据" class="headerlink" title="应用转换处理Pipeline数据"></a>应用转换处理Pipeline数据</h2><div class="note info"><p>这里我们可以使用Beam SDK提供的各种转换操作数据。通过PCollection的apply方法处理每一个PCollection并所需的转换对象作为参数进行传递，将转换应用于Pipeline。</p>
+</div>
+<p>以下的示例代码演示了如何应用一个转换到类型为string的PCollection上。<br>用户定义的自定义变换，它可以反转每个字符串的内容，并输出一个包含反转字符串的PCollection新变量</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">PCollection&lt;String&gt; words = ...;</div><div class="line">PCollection&lt;String&gt; reversedWords = words.apply(<span class="keyword">new</span> ReverseWords());</div></pre></td></tr></table></figure>
+<h2 id="写入或输出最终管道数据"><a href="#写入或输出最终管道数据" class="headerlink" title="写入或输出最终管道数据"></a>写入或输出最终管道数据</h2><div class="note info"><p>应用所有的转换之后，你需要将计算结果进行输出。输出Pipeline最终的<strong><em>PCollections</em></strong>，可以使用<strong><em>Write</em></strong>转换进行操作。<strong><em>Write</em></strong>转换可以输出每一个<strong><em>PCollection</em></strong>到一个外部data sink，例如数据库表。你可以在pipeline中通过<strong><em>Write</em></strong>输出<strong><em>PCollection</em></strong>，通常会在pipeline末端写出数据。</p>
+</div>
+<p>下面的示例代码演示了如何apply一个<strong><em>TextIO.Write</em></strong>转换将<strong><em>PCollection</em></strong>的String文本写入到文件：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">PCollection&lt;String&gt; filteredWords = ...;</div><div class="line"></div><div class="line">filteredWords.apply(<span class="string">"WriteMyFile"</span>, TextIO.write().to(<span class="string">"gs://some/outputData.txt"</span>));</div></pre></td></tr></table></figure></p>
+<h2 id="运行Pipeline"><a href="#运行Pipeline" class="headerlink" title="运行Pipeline"></a>运行Pipeline</h2><p>构建完Pipeline后，可以采用run方法运行。<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">p.run();</div></pre></td></tr></table></figure></p>
+<p>run方法是异步的。如果想要同步运行，可以在run方法后面添加waitUntilFinish方法<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">p.run().waitUntilFinish();</div></pre></td></tr></table></figure></p>
+<p>参考链接：<br><a href="https://beam.apache.org/documentation/pipelines/create-your-pipeline/" target="_blank" rel="external">https://beam.apache.org/documentation/pipelines/create-your-pipeline/</a></p>
 
       
     </div>
@@ -442,7 +458,7 @@
       
         <div class="post-tags">
           
-            <a href="/tags/Hello/" rel="tag"># Hello</a>
+            <a href="/tags/apache-beam/" rel="tag"># apache beam</a>
           
         </div>
       
@@ -455,14 +471,18 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
+              <a href="/2017/06/15/beam-stateful-processing/" rel="next" title="beam-stateful-processing">
+                <i class="fa fa-chevron-left"></i> beam-stateful-processing
+              </a>
+            
           </div>
 
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
             
-              <a href="/2017/05/31/common-tools-repository/" rel="prev" title="常用工具库">
-                常用工具库 <i class="fa fa-chevron-right"></i>
+              <a href="/2017/06/16/design-your-pipeline/" rel="prev" title="Apache beam - Pipeline设计">
+                Apache beam - Pipeline设计 <i class="fa fa-chevron-right"></i>
               </a>
             
           </div>
@@ -617,7 +637,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Quick-Start"><span class="nav-number">1.</span> <span class="nav-text">Quick Start</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Create-a-new-post"><span class="nav-number">1.1.</span> <span class="nav-text">Create a new post</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Run-server"><span class="nav-number">1.2.</span> <span class="nav-text">Run server</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Generate-static-files"><span class="nav-number">1.3.</span> <span class="nav-text">Generate static files</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Deploy-to-remote-sites"><span class="nav-number">1.4.</span> <span class="nav-text">Deploy to remote sites</span></a></li></ol></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#创建Pipeline对象"><span class="nav-number">1.</span> <span class="nav-text">创建Pipeline对象</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#将数据读取进管道"><span class="nav-number">2.</span> <span class="nav-text">将数据读取进管道</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#应用转换处理Pipeline数据"><span class="nav-number">3.</span> <span class="nav-text">应用转换处理Pipeline数据</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#写入或输出最终管道数据"><span class="nav-number">4.</span> <span class="nav-text">写入或输出最终管道数据</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#运行Pipeline"><span class="nav-number">5.</span> <span class="nav-text">运行Pipeline</span></a></li></ol></div>
             
 
           </div>
@@ -760,9 +780,9 @@
     
       <script type="text/javascript">
         var disqus_config = function () {
-          this.page.url = 'http://yoursite.com/2017/05/02/hello-world/';
-          this.page.identifier = '2017/05/02/hello-world/';
-          this.page.title = 'Hello World';
+          this.page.url = 'http://yoursite.com/2017/06/16/create-your-pipeline/';
+          this.page.identifier = '2017/06/16/create-your-pipeline/';
+          this.page.title = 'Apache beam - 创建Pipeline';
         };
         var d = document, s = d.createElement('script');
         s.src = 'https://weijiyonglover.disqus.com/embed.js';

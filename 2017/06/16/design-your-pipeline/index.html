@@ -78,7 +78,7 @@
 <link href="/css/main.css?v=5.1.1" rel="stylesheet" type="text/css" />
 
 
-  <meta name="keywords" content="Hello," />
+  <meta name="keywords" content="apache beam," />
 
 
 
@@ -96,17 +96,23 @@
 
 
 
-<meta name="description" content="Welcome to Hexo! This is your very first post. Check documentation for more info. If you get any problems when using Hexo, you can find the answer in troubleshooting or you can ask me on GitHub. Quick">
-<meta name="keywords" content="Hello">
+<meta name="description" content="设计Pipeline时需要考虑什么？当我们设计我们的beam pipeline时，需要考虑的一些基础问题：  你的输入数据存储在哪里？这将决定Read在pipeline开始时需要使用哪些类型的转换 你的数据是怎么样的？ 你想用数据做什么？ 你的输出数据是什么样的，应该存储到哪里？这个决定write在pipeline末端使用哪些类型的transforms  ##一条基本的Pipeline最简单的Pi">
+<meta name="keywords" content="apache beam">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Hello World">
-<meta property="og:url" content="http://yoursite.com/2017/05/02/hello-world/index.html">
+<meta property="og:title" content="Apache beam - Pipeline设计">
+<meta property="og:url" content="http://yoursite.com/2017/06/16/design-your-pipeline/index.html">
 <meta property="og:site_name" content="Jonathan.Wei&#39;s Notes">
-<meta property="og:description" content="Welcome to Hexo! This is your very first post. Check documentation for more info. If you get any problems when using Hexo, you can find the answer in troubleshooting or you can ask me on GitHub. Quick">
-<meta property="og:updated_time" content="2017-06-02T08:43:25.000Z">
+<meta property="og:description" content="设计Pipeline时需要考虑什么？当我们设计我们的beam pipeline时，需要考虑的一些基础问题：  你的输入数据存储在哪里？这将决定Read在pipeline开始时需要使用哪些类型的转换 你的数据是怎么样的？ 你想用数据做什么？ 你的输出数据是什么样的，应该存储到哪里？这个决定write在pipeline末端使用哪些类型的transforms  ##一条基本的Pipeline最简单的Pi">
+<meta property="og:image" content="http://yoursite.com/images/design-your-pipeline-linear.png">
+<meta property="og:image" content="http://yoursite.com/images/design-your-pipeline-multiple-pcollections.png">
+<meta property="og:image" content="http://yoursite.com/images/design-your-pipeline-additional-outputs.png">
+<meta property="og:image" content="http://yoursite.com/images/design-your-pipeline-flatten.png">
+<meta property="og:image" content="http://yoursite.com/images/design-your-pipeline-join.png">
+<meta property="og:updated_time" content="2017-06-23T01:50:34.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Hello World">
-<meta name="twitter:description" content="Welcome to Hexo! This is your very first post. Check documentation for more info. If you get any problems when using Hexo, you can find the answer in troubleshooting or you can ask me on GitHub. Quick">
+<meta name="twitter:title" content="Apache beam - Pipeline设计">
+<meta name="twitter:description" content="设计Pipeline时需要考虑什么？当我们设计我们的beam pipeline时，需要考虑的一些基础问题：  你的输入数据存储在哪里？这将决定Read在pipeline开始时需要使用哪些类型的转换 你的数据是怎么样的？ 你想用数据做什么？ 你的输出数据是什么样的，应该存储到哪里？这个决定write在pipeline末端使用哪些类型的transforms  ##一条基本的Pipeline最简单的Pi">
+<meta name="twitter:image" content="http://yoursite.com/images/design-your-pipeline-linear.png">
 
 
 
@@ -134,13 +140,13 @@
 
 
 
-  <link rel="canonical" href="http://yoursite.com/2017/05/02/hello-world/"/>
+  <link rel="canonical" href="http://yoursite.com/2017/06/16/design-your-pipeline/"/>
 
 
 
 
 
-  <title>Hello World | Jonathan.Wei's Notes</title>
+  <title>Apache beam - Pipeline设计 | Jonathan.Wei's Notes</title>
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
@@ -280,7 +286,7 @@
   
 
   <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/05/02/hello-world/">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/06/16/design-your-pipeline/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="Jonathan.Wei">
@@ -297,7 +303,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">Hello World</h1>
+          <h1 class="post-title" itemprop="name headline">Apache beam - Pipeline设计</h1>
         
 
         <div class="post-meta">
@@ -309,8 +315,8 @@
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-05-02T16:23:12+08:00">
-                2017-05-02
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-06-16T17:30:12+08:00">
+                2017-06-16
               </time>
             
 
@@ -332,8 +338,8 @@
               
               
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Testing/" itemprop="url" rel="index">
-                    <span itemprop="name">Testing</span>
+                  <a href="/categories/apache-beam/" itemprop="url" rel="index">
+                    <span itemprop="name">apache beam</span>
                   </a>
                 </span>
 
@@ -350,9 +356,9 @@
                 <span class="post-meta-item-icon">
                   <i class="fa fa-comment-o"></i>
                 </span>
-                <a href="/2017/05/02/hello-world/#comments" itemprop="discussionUrl">
+                <a href="/2017/06/16/design-your-pipeline/#comments" itemprop="discussionUrl">
                   <span class="post-comments-count disqus-comment-count"
-                        data-disqus-identifier="2017/05/02/hello-world/" itemprop="commentCount"></span>
+                        data-disqus-identifier="2017/06/16/design-your-pipeline/" itemprop="commentCount"></span>
                 </a>
               </span>
             
@@ -360,7 +366,7 @@
 
           
           
-             <span id="/2017/05/02/hello-world/" class="leancloud_visitors" data-flag-title="Hello World">
+             <span id="/2017/06/16/design-your-pipeline/" class="leancloud_visitors" data-flag-title="Apache beam - Pipeline设计">
                <span class="post-meta-divider">|</span>
                <span class="post-meta-item-icon">
                  <i class="fa fa-eye"></i>
@@ -388,15 +394,25 @@
       
 
       
-        <p>Welcome to <a href="https://hexo.io/" target="_blank" rel="external">Hexo</a>! This is your very first post. Check <a href="https://hexo.io/docs/" target="_blank" rel="external">documentation</a> for more info. If you get any problems when using Hexo, you can find the answer in <a href="https://hexo.io/docs/troubleshooting.html" target="_blank" rel="external">troubleshooting</a> or you can ask me on <a href="https://github.com/hexojs/hexo/issues" target="_blank" rel="external">GitHub</a>.</p>
-<h2 id="Quick-Start"><a href="#Quick-Start" class="headerlink" title="Quick Start"></a>Quick Start</h2><h3 id="Create-a-new-post"><a href="#Create-a-new-post" class="headerlink" title="Create a new post"></a>Create a new post</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ hexo new <span class="string">"My New Post"</span></div></pre></td></tr></table></figure>
-<p>More info: <a href="https://hexo.io/docs/writing.html" target="_blank" rel="external">Writing</a><br><a id="more"></a></p>
-<h3 id="Run-server"><a href="#Run-server" class="headerlink" title="Run server"></a>Run server</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ hexo server</div></pre></td></tr></table></figure>
-<p>More info: <a href="https://hexo.io/docs/server.html" target="_blank" rel="external">Server</a></p>
-<h3 id="Generate-static-files"><a href="#Generate-static-files" class="headerlink" title="Generate static files"></a>Generate static files</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ hexo generate</div></pre></td></tr></table></figure>
-<p>More info: <a href="https://hexo.io/docs/generating.html" target="_blank" rel="external">Generating</a></p>
-<h3 id="Deploy-to-remote-sites"><a href="#Deploy-to-remote-sites" class="headerlink" title="Deploy to remote sites"></a>Deploy to remote sites</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ hexo deploy</div></pre></td></tr></table></figure>
-<p>More info: <a href="https://hexo.io/docs/deployment.html" target="_blank" rel="external">Deployment</a></p>
+        <h2 id="设计Pipeline时需要考虑什么？"><a href="#设计Pipeline时需要考虑什么？" class="headerlink" title="设计Pipeline时需要考虑什么？"></a>设计Pipeline时需要考虑什么？</h2><p>当我们设计我们的beam pipeline时，需要考虑的一些基础问题：</p>
+<ul>
+<li>你的输入数据存储在哪里？这将决定<strong><em>Read</em></strong>在pipeline开始时需要使用哪些类型的转换</li>
+<li>你的数据是怎么样的？</li>
+<li>你想用数据做什么？</li>
+<li>你的输出数据是什么样的，应该存储到哪里？这个决定<strong><em>write</em></strong>在pipeline末端使用哪些类型的transforms</li>
+</ul>
+<p>##一条基本的Pipeline<br>最简单的Pipeline体现为一个线性的操作流程。如下图<br><img src="/images/design-your-pipeline-linear.png" alt="img"><br><a id="more"></a><br>但是，在实际场景中，Pipeline比基本的Pipeline要复杂的多。Pipeline代表一个有步骤的有向无环图。它可能有多个输入源，多个输出接收器，并且其操作PTransforms可以读取和输出多个PCollections。</p>
+<h2 id="分支PCollections"><a href="#分支PCollections" class="headerlink" title="分支PCollections"></a>分支PCollections</h2><div class="note info"><p>重要的是要了解Transforms不消耗PCollections，相反，他们认为每一个独立的元素都是一个PCollection，且创建一个新的PCollection用于输出。这样，我们就可以对同一个PCollection中的不同元素做不同的操作。</p>
+</div>
+<h3 id="多个PTransforms处理相同的PCollections"><a href="#多个PTransforms处理相同的PCollections" class="headerlink" title="多个PTransforms处理相同的PCollections"></a>多个PTransforms处理相同的PCollections</h3><p>分支管道的另一种方法是通过使用带标签的输出将单个变换输出转换为多个<br>图中所示的流水线从单个数据库源读取输入数据，并创建一个PCollection表行。然后，Pipeline将多个transforms应用到同一个PCollection。转换a读取所有以A字母开头的PCollection，转换b读取所有以B开头的PCollection。转换a与转换b的输入是同一个PCollection<br><img src="/images/design-your-pipeline-multiple-pcollections.png" alt="img"><br>图2中的Pipeline包含两个处理相同PCollection元素的转换，一个转换使用以下逻辑：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">if</span>（以<span class="string">'A'</span>开头）&#123;outputToPCollectionA&#125;</div></pre></td></tr></table></figure></p>
+<p>而另一个转换则是：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">if</span>（以<span class="string">'B'</span>开头）&#123;outputToPCollectionB&#125;</div></pre></td></tr></table></figure></p>
+<p>因为每个转换都读取整个PCollection，所以PCollection中的每个元素都被处理两次。<br>图3中的Pipeline以不同的方式执行相同的操作。下面的逻辑只使用一个转换<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">if</span>（以<span class="string">'A'</span>开头）&#123;outputToPCollectionA&#125; <span class="keyword">else</span> <span class="keyword">if</span>（以<span class="string">'B'</span>开头）&#123;outputToPCollectionB&#125;</div></pre></td></tr></table></figure></p>
+<p>其中输入PCollection中的每个元素<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div></pre></td><td class="code"><pre><div class="line">PCollection&lt;String&gt; dbRowCollection = ...;</div><div class="line"></div><div class="line">PCollection&lt;String&gt; aCollection = dbRowCollection.apply(<span class="string">"aTrans"</span>, ParDo.of(<span class="keyword">new</span> DoFn&lt;String, String&gt;()&#123;</div><div class="line">  <span class="meta">@ProcessElement</span></div><div class="line">  <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">processElement</span><span class="params">(ProcessContext c)</span> </span>&#123;</div><div class="line">    <span class="keyword">if</span>(c.element().startsWith(<span class="string">"A"</span>))&#123;</div><div class="line">      c.output(c.element());</div><div class="line">    &#125;</div><div class="line">  &#125;</div><div class="line">&#125;));</div><div class="line"></div><div class="line">PCollection&lt;String&gt; bCollection = dbRowCollection.apply(<span class="string">"bTrans"</span>, ParDo.of(<span class="keyword">new</span> DoFn&lt;String, String&gt;()&#123;</div><div class="line">  <span class="meta">@ProcessElement</span></div><div class="line">  <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">processElement</span><span class="params">(ProcessContext c)</span> </span>&#123;</div><div class="line">    <span class="keyword">if</span>(c.element().startsWith(<span class="string">"B"</span>))&#123;</div><div class="line">      c.output(c.element());</div><div class="line">    &#125;</div><div class="line">  &#125;</div><div class="line">&#125;));</div></pre></td></tr></table></figure></p>
+<p>您可以使用任一机制来产生多个输出PCollection。然而，如果变换的每个元素的计算是耗时的，则使用额外的输出更有意义</p>
+<h3 id="单个PTransforms产生多个输出"><a href="#单个PTransforms产生多个输出" class="headerlink" title="单个PTransforms产生多个输出"></a>单个PTransforms产生多个输出</h3><p><img src="/images/design-your-pipeline-additional-outputs.png" alt="img"><br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// Define two TupleTags, one for each output.</span></div><div class="line"><span class="keyword">final</span> TupleTag&lt;String&gt; startsWithATag = <span class="keyword">new</span> TupleTag&lt;String&gt;()&#123;&#125;;</div><div class="line"><span class="keyword">final</span> TupleTag&lt;String&gt; startsWithBTag = <span class="keyword">new</span> TupleTag&lt;String&gt;()&#123;&#125;;</div><div class="line"></div><div class="line">PCollectionTuple mixedCollection =</div><div class="line">    dbRowCollection.apply(ParDo</div><div class="line">        .of(<span class="keyword">new</span> DoFn&lt;String, String&gt;() &#123;</div><div class="line">          <span class="meta">@ProcessElement</span></div><div class="line">          <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">processElement</span><span class="params">(ProcessContext c)</span> </span>&#123;</div><div class="line">            <span class="keyword">if</span> (c.element().startsWith(<span class="string">"A"</span>)) &#123;</div><div class="line">              <span class="comment">// Emit to main output, which is the output with tag startsWithATag.</span></div><div class="line">              c.output(c.element());</div><div class="line">            &#125; <span class="keyword">else</span> <span class="keyword">if</span>(c.element().startsWith(<span class="string">"B"</span>)) &#123;</div><div class="line">              <span class="comment">// Emit to output with tag startsWithBTag.</span></div><div class="line">              c.output(startsWithBTag, c.element());</div><div class="line">            &#125;</div><div class="line">          &#125;</div><div class="line">        &#125;)</div><div class="line">        <span class="comment">// Specify main output. In this example, it is the output</span></div><div class="line">        <span class="comment">// with tag startsWithATag.</span></div><div class="line">        .withOutputTags(startsWithATag,</div><div class="line">        <span class="comment">// Specify the output with tag startsWithBTag, as a TupleTagList.</span></div><div class="line">                        TupleTagList.of(startsWithBTag)));</div><div class="line"></div><div class="line"><span class="comment">// Get subset of the output with tag startsWithATag.</span></div><div class="line">mixedCollection.get(startsWithATag).apply(...);</div><div class="line"></div><div class="line"><span class="comment">// Get subset of the output with tag startsWithBTag.</span></div><div class="line">mixedCollection.get(startsWithBTag).apply(...);</div></pre></td></tr></table></figure></p>
+<h3 id="合并PCollections"><a href="#合并PCollections" class="headerlink" title="合并PCollections"></a>合并PCollections</h3><p><img src="/images/design-your-pipeline-flatten.png" alt="img"><br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line"><span class="comment">//merge the two PCollections with Flatten</span></div><div class="line">PCollectionList&lt;String&gt; collectionList = PCollectionList.of(aCollection).and(bCollection);</div><div class="line">PCollection&lt;String&gt; mergedCollectionWithFlatten = collectionList</div><div class="line">    .apply(Flatten.&lt;String&gt;pCollections());</div><div class="line"></div><div class="line"><span class="comment">// continue with the new merged PCollection     </span></div><div class="line">mergedCollectionWithFlatten.apply(...);</div></pre></td></tr></table></figure></p>
+<h3 id="多个来源"><a href="#多个来源" class="headerlink" title="多个来源"></a>多个来源</h3><p><img src="/images/design-your-pipeline-join.png" alt="img"><br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line">PCollection&lt;KV&lt;String, String&gt;&gt; userAddress = pipeline.apply(JdbcIO.&lt;KV&lt;String, String&gt;&gt;read()...);</div><div class="line"></div><div class="line">PCollection&lt;KV&lt;String, String&gt;&gt; userOrder = pipeline.apply(KafkaIO.&lt;String, String&gt;read()...);</div><div class="line"></div><div class="line"><span class="keyword">final</span> TupleTag&lt;String&gt; addressTag = <span class="keyword">new</span> TupleTag&lt;String&gt;();</div><div class="line"><span class="keyword">final</span> TupleTag&lt;String&gt; orderTag = <span class="keyword">new</span> TupleTag&lt;String&gt;();</div><div class="line"></div><div class="line"><span class="comment">// Merge collection values into a CoGbkResult collection.</span></div><div class="line">PCollection&lt;KV&lt;String, CoGbkResult&gt;&gt; joinedCollection =</div><div class="line">  KeyedPCollectionTuple.of(addressTag, userAddress)</div><div class="line">                       .and(orderTag, userOrder)</div><div class="line">                       .apply(CoGroupByKey.&lt;String&gt;create());</div><div class="line"></div><div class="line">coGbkResultCollection.apply(...);</div></pre></td></tr></table></figure></p>
+<p>参考链接：<br><a href="https://beam.apache.org/documentation/pipelines/design-your-pipeline/" target="_blank" rel="external">https://beam.apache.org/documentation/pipelines/design-your-pipeline/</a></p>
 
       
     </div>
@@ -442,7 +458,7 @@
       
         <div class="post-tags">
           
-            <a href="/tags/Hello/" rel="tag"># Hello</a>
+            <a href="/tags/apache-beam/" rel="tag"># apache beam</a>
           
         </div>
       
@@ -455,15 +471,15 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
+              <a href="/2017/06/16/create-your-pipeline/" rel="next" title="Apache beam - 创建Pipeline">
+                <i class="fa fa-chevron-left"></i> Apache beam - 创建Pipeline
+              </a>
+            
           </div>
 
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
-            
-              <a href="/2017/05/31/common-tools-repository/" rel="prev" title="常用工具库">
-                常用工具库 <i class="fa fa-chevron-right"></i>
-              </a>
             
           </div>
         </div>
@@ -617,7 +633,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Quick-Start"><span class="nav-number">1.</span> <span class="nav-text">Quick Start</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Create-a-new-post"><span class="nav-number">1.1.</span> <span class="nav-text">Create a new post</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Run-server"><span class="nav-number">1.2.</span> <span class="nav-text">Run server</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Generate-static-files"><span class="nav-number">1.3.</span> <span class="nav-text">Generate static files</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Deploy-to-remote-sites"><span class="nav-number">1.4.</span> <span class="nav-text">Deploy to remote sites</span></a></li></ol></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#设计Pipeline时需要考虑什么？"><span class="nav-number">1.</span> <span class="nav-text">设计Pipeline时需要考虑什么？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#分支PCollections"><span class="nav-number">2.</span> <span class="nav-text">分支PCollections</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#多个PTransforms处理相同的PCollections"><span class="nav-number">2.1.</span> <span class="nav-text">多个PTransforms处理相同的PCollections</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#单个PTransforms产生多个输出"><span class="nav-number">2.2.</span> <span class="nav-text">单个PTransforms产生多个输出</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#合并PCollections"><span class="nav-number">2.3.</span> <span class="nav-text">合并PCollections</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#多个来源"><span class="nav-number">2.4.</span> <span class="nav-text">多个来源</span></a></li></ol></li></ol></div>
             
 
           </div>
@@ -760,9 +776,9 @@
     
       <script type="text/javascript">
         var disqus_config = function () {
-          this.page.url = 'http://yoursite.com/2017/05/02/hello-world/';
-          this.page.identifier = '2017/05/02/hello-world/';
-          this.page.title = 'Hello World';
+          this.page.url = 'http://yoursite.com/2017/06/16/design-your-pipeline/';
+          this.page.identifier = '2017/06/16/design-your-pipeline/';
+          this.page.title = 'Apache beam - Pipeline设计';
         };
         var d = document, s = d.createElement('script');
         s.src = 'https://weijiyonglover.disqus.com/embed.js';

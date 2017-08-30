@@ -1,0 +1,991 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+  <link href="//cdn.jsdelivr.net/fancybox/2.1.5/jquery.fancybox.min.css" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+  
+
+<link href="//maxcdn.bootstrapcdn.com/font-awesome/4.6.2/css/font-awesome.min.css" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.1" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="apache beam,stateful," />
+
+
+
+
+
+  <link rel="alternate" href="/atom.xml" title="Jonathan.Wei's Notes" type="application/atom+xml" />
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.1" />
+
+
+
+
+
+
+<meta name="description" content="Apache beam让我们可以使用可移植高级的pipelines来处理无界限的、无序的、全局性的数据。有状态数据处理是apache beam提供的一个新的特性，扩展了beam的功能，同时也解锁了新的使用场景。 首先，看下下面这张图：在beam中，一个大数据处理流水Pipelines是一个从PCollection获取数据，通过PTransforms进行数据处理的有向无环图。">
+<meta name="keywords" content="apache beam,stateful">
+<meta property="og:type" content="article">
+<meta property="og:title" content="beam-stateful-processing">
+<meta property="og:url" content="http://yoursite.com/2017/06/15/beam-stateful-processing/index.html">
+<meta property="og:site_name" content="Jonathan.Wei&#39;s Notes">
+<meta property="og:description" content="Apache beam让我们可以使用可移植高级的pipelines来处理无界限的、无序的、全局性的数据。有状态数据处理是apache beam提供的一个新的特性，扩展了beam的功能，同时也解锁了新的使用场景。 首先，看下下面这张图：在beam中，一个大数据处理流水Pipelines是一个从PCollection获取数据，通过PTransforms进行数据处理的有向无环图。">
+<meta property="og:image" content="http://yoursite.com/images/pipeline.png">
+<meta property="og:image" content="http://yoursite.com/images/pardo-and-gbk.png">
+<meta property="og:image" content="http://yoursite.com/images/stateful-pardo.png">
+<meta property="og:image" content="http://yoursite.com/images/stateful-dofn.png">
+<meta property="og:updated_time" content="2017-06-23T01:50:50.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="beam-stateful-processing">
+<meta name="twitter:description" content="Apache beam让我们可以使用可移植高级的pipelines来处理无界限的、无序的、全局性的数据。有状态数据处理是apache beam提供的一个新的特性，扩展了beam的功能，同时也解锁了新的使用场景。 首先，看下下面这张图：在beam中，一个大数据处理流水Pipelines是一个从PCollection获取数据，通过PTransforms进行数据处理的有向无环图。">
+<meta name="twitter:image" content="http://yoursite.com/images/pipeline.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2017/06/15/beam-stateful-processing/"/>
+
+
+
+
+
+  <title>beam-stateful-processing | Jonathan.Wei's Notes</title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Jonathan.Wei's Notes</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/06/15/beam-stateful-processing/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Jonathan.Wei">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/headportrait.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Jonathan.Wei's Notes">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">beam-stateful-processing</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-06-15T16:43:33+08:00">
+                2017-06-15
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/apache-beam/" itemprop="url" rel="index">
+                    <span itemprop="name">apache beam</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2017/06/15/beam-stateful-processing/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count disqus-comment-count"
+                        data-disqus-identifier="2017/06/15/beam-stateful-processing/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+             <span id="/2017/06/15/beam-stateful-processing/" class="leancloud_visitors" data-flag-title="beam-stateful-processing">
+               <span class="post-meta-divider">|</span>
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               
+                 <span class="post-meta-item-text">阅读次数 </span>
+               
+                 <span class="leancloud-visitors-count"></span>
+             </span>
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>Apache beam让我们可以使用可移植高级的pipelines来处理无界限的、无序的、全局性的数据。有状态数据处理是apache beam提供的一个新的特性，扩展了beam的功能，同时也解锁了新的使用场景。</p>
+<p>首先，看下下面这张图：在beam中，一个大数据处理流水<strong><em>Pipelines</em></strong>是一个从<strong><em>PCollection</em></strong>获取数据，通过<strong><em>PTransforms</em></strong>进行数据处理的有向无环图。<br><img src="/images/pipeline.png" alt="img"><br> <a id="more"></a><br><div class="note danger"><p>方框代表<strong><em>PTransforms</em></strong> ，箭头代表数据从一个<strong><em>PTransforms</em></strong>流向下一个<strong><em>PTransforms</em></strong>。一个<strong><em>PCollections</em></strong>可能是有界的或者是无界的，圆柱体代表流水线的数据来源以及数据汇集结果，例如日志文件的有界集合或通过kafka topic的无界数据流</p>
+</div></p>
+<p>在Beam中有2个主要的构建块去处理数据：<strong><em>ParDo</em></strong>用于在所有元素上并发执行操作，以及<strong><em>GroupByKey</em></strong>(以及<strong><em>CombinePerKey</em></strong>)，用于将相同key的元素进行聚合<br><img src="/images/pardo-and-gbk.png" alt="img"><br>但并不是所有的场景都能用简单的ParDo／Map和GroupByKey／CombinePerKey transforms来表示的。状态处理上beam编程模型的的一个新的扩展：<strong><em>每个元素的操作增加了可变状态</em></strong><br><img src="/images/stateful-pardo.png" alt="img"><br><div class="note danger"><p>状态是按键划分的，因此从上图可以每一个key被划分为不同颜色的层。</p>
+</div></p>
+<h2 id="Beam的状态处理是如何工作的？"><a href="#Beam的状态处理是如何工作的？" class="headerlink" title="Beam的状态处理是如何工作的？"></a>Beam的状态处理是如何工作的？</h2><p><img src="/images/stateful-dofn.png" alt="img"></p>
+<h2 id="Beam-Java-SDK中的状态处理"><a href="#Beam-Java-SDK中的状态处理" class="headerlink" title="Beam Java SDK中的状态处理"></a>Beam Java SDK中的状态处理</h2><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">new</span> DoFn&lt;KV&lt;MyKey, MyValue&gt;, KV&lt;Integer, KV&lt;MyKey, MyValue&gt;&gt;&gt;() &#123;</div><div class="line"></div><div class="line">  <span class="comment">// A state cell holding a single Integer per key+window</span></div><div class="line">  <span class="meta">@StateId</span>(<span class="string">"index"</span>)</div><div class="line">  <span class="keyword">private</span> <span class="keyword">final</span> StateSpec&lt;Object, ValueState&lt;Integer&gt;&gt; indexSpec = </div><div class="line">      StateSpecs.value(VarIntCoder.of());</div><div class="line"></div><div class="line">  <span class="meta">@ProcessElement</span></div><div class="line">  <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">processElement</span><span class="params">(</span></span></div><div class="line">      ProcessContext context,</div><div class="line">      @StateId(<span class="string">"index"</span>) ValueState&lt;Integer&gt; index) &#123;</div><div class="line">    <span class="keyword">int</span> current = firstNonNull(index.read(), <span class="number">0</span>);</div><div class="line">    context.output(KV.of(current, context.element()));</div><div class="line">    index.write(current+<span class="number">1</span>);</div><div class="line">  &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>我们来解析一下：</p>
+<ul>
+<li>首先我们可以看到在变量indexSpec上添加了<strong><em>@StateId(“index”)</em></strong>注解。这就是说，我们在DoFn中定义了一个名为index的可变状态元素</li>
+<li>第一个<strong><em>@StateId(“index”)</em></strong>注释在一个类型为<strong><em>StateSpecs</em></strong>(用于状态规范)上。这声明并配置状态元素。type参数<strong><em>ValueState</em></strong>描述了您可以从该元素中获取状态-<strong><em>ValueState</em></strong></li>
+<li>要完全指定<strong><em>ValueState</em></strong>元素，您需要提供运行程序将使用的编码器（根据需要）来序列化要存储的值。调用<strong><em>StateSpecs.value(VarIntCoder.of())</em></strong></li>
+<li>第二个<strong><em>@StateId(“index”)</em></strong>注释<strong><em>@ProcessElement</em></strong>方法的参数。这表示访问先前指定的<strong><em>ValueState</em></strong>元素</li>
+<li>状态访问方式：<strong><em>read()</em></strong>读取，<strong><em>write(newvalue)</em></strong>写入</li>
+<li>其他功能以DoFn常用的方式提供 - 例如 context.output(…)</li>
+</ul>
+<p>注意事项：</p>
+<ul>
+<li>状态元素需要明确声明，Beam SDK或者Runner才可以对识别到，例如在窗口过期时将其清除</li>
+<li>如果您声明一个状态元素，然后使用错误的类型，则Beam Java SDK将为您捕获该错误</li>
+<li>如果您声明两个状态单元格具有相同的ID，则SDK也将捕获该状态元素错误</li>
+<li>Runner这运行包含状态的DoFn和不包含DoFn是完全不同的。例如通过附加的数据混洗和同步来避免对状态单元的并发访问</li>
+</ul>
+<p>##示例：异常检测<br>假设您正在将用户的一系列动作反馈到一些复杂的模型中，以预测它们所采取的各种行为的数量表达式，例如检测欺诈活动。您将从事件中建立模型，并将传入的事件与最新的模型进行比较，以确定某些内容是否发生变化。</p>
+<p>如果尝试将模型的建立表示为一个<strong><em>CombineFn</em></strong>，则可能会在<strong><em>mergeAccumulators</em></strong>方法上遇到麻烦。假设可以表达，它可能看起来像这样：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div></pre></td><td class="code"><pre><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">ModelFromEventsFn</span> <span class="keyword">extends</span> <span class="title">CombineFn</span>&lt;<span class="title">Event</span>, <span class="title">Model</span>, <span class="title">Model</span>&gt; </span>&#123;</div><div class="line">    <span class="meta">@Override</span></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">abstract</span> Model <span class="title">createAccumulator</span><span class="params">()</span> </span>&#123;</div><div class="line">      <span class="keyword">return</span> Model.empty();</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="meta">@Override</span></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">abstract</span> Model <span class="title">addInput</span><span class="params">(Model accumulator, Event input)</span> </span>&#123;</div><div class="line">      <span class="keyword">return</span> accumulator.update(input); <span class="comment">// this is encouraged to mutate, for efficiency</span></div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="meta">@Override</span></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">abstract</span> Model <span class="title">mergeAccumulators</span><span class="params">(Iterable&lt;Model&gt; accumulators)</span> </span>&#123;</div><div class="line">      <span class="comment">// ?? can you write this ??</span></div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="meta">@Override</span></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">abstract</span> Model <span class="title">extractOutput</span><span class="params">(Model accumulator)</span> </span>&#123;</div><div class="line">      <span class="keyword">return</span> accumulator; &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>现在你有一种方法来计算一个窗口的特定用户的模型 <strong><em>Combine.perKey(new ModelFromEventsFn())</em></strong>。如何将该模型应用于计算它的相同事件流中？</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div></pre></td><td class="code"><pre><div class="line">PCollection&lt;KV&lt;UserId, Event&gt;&gt; events = ...</div><div class="line"></div><div class="line"><span class="keyword">final</span> PCollectionView&lt;Map&lt;UserId, Model&gt;&gt; userModels = events</div><div class="line">    .apply(Combine.perKey(<span class="keyword">new</span> ModelFromEventsFn()))</div><div class="line">    .apply(View.asMap());</div><div class="line"></div><div class="line">PCollection&lt;KV&lt;UserId, Prediction&gt;&gt; predictions = events</div><div class="line">    .apply(ParDo.of(<span class="keyword">new</span> DoFn&lt;KV&lt;UserId, Event&gt;&gt;() &#123;</div><div class="line"></div><div class="line">      <span class="meta">@ProcessElement</span></div><div class="line">      <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">processElement</span><span class="params">(ProcessContext ctx)</span> </span>&#123;</div><div class="line">        UserId userId = ctx.element().getKey();</div><div class="line">        Event event = ctx.element().getValue();</div><div class="line"></div><div class="line">        Model model = ctx.sideinput(userModels).get(userId);</div><div class="line"></div><div class="line">        <span class="comment">// Perhaps some logic around when to output a new prediction</span></div><div class="line">        … c.output(KV.of(userId, model.prediction(event))) … </div><div class="line">      &#125;</div><div class="line">    &#125;));</div></pre></td></tr></table></figure>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line">PCollection&lt;KV&lt;UserId, Event&gt;&gt; events = ...</div><div class="line"></div><div class="line">PCollectionView&lt;Map&lt;UserId, Model&gt;&gt; userModels = events</div><div class="line"></div><div class="line">    <span class="comment">// A tradeoff between latency and cost</span></div><div class="line">    .apply(Window.triggering(</div><div class="line">        AfterProcessingTime.pastFirstElementInPane(Duration.standardSeconds(<span class="number">1</span>)))</div><div class="line"></div><div class="line">    .apply(Combine.perKey(<span class="keyword">new</span> ModelFromEventsFn()))</div><div class="line">    .apply(View.asMap());</div></pre></td></tr></table></figure>
+<p>这通常是延迟和成本之间相当不错的折衷：</p>
+<p>有状态处理可以解决侧面输入的延迟问题以及过度不感兴趣的输出的成本问题</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">new</span> DoFn&lt;KV&lt;UserId, Event&gt;, KV&lt;UserId, Prediction&gt;&gt;() &#123;</div><div class="line"></div><div class="line">  <span class="meta">@StateId</span>(<span class="string">"model"</span>)</div><div class="line">  <span class="keyword">private</span> <span class="keyword">final</span> StateSpec&lt;Object, ValueState&lt;Model&gt;&gt; modelSpec =</div><div class="line">      StateSpecs.value(Model.coder());</div><div class="line"></div><div class="line">  <span class="meta">@StateId</span>(<span class="string">"previousPrediction"</span>)</div><div class="line">  <span class="keyword">private</span> <span class="keyword">final</span> StateSpec&lt;Object, ValueState&lt;Prediction&gt;&gt; previousPredictionSpec =</div><div class="line">      StateSpecs.value(Prediction.coder());</div><div class="line"></div><div class="line">  <span class="meta">@ProcessElement</span></div><div class="line">  <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">processElement</span><span class="params">(</span></span></div><div class="line">      ProcessContext c,</div><div class="line">      @StateId(<span class="string">"previousPrediction"</span>) ValueState&lt;Prediction&gt; previousPredictionState,</div><div class="line">      @<span class="title">StateId</span><span class="params">(<span class="string">"model"</span>)</span> ValueState&lt;Model&gt; modelState) &#123;</div><div class="line">    UserId userId = c.element().getKey();</div><div class="line">    Event event = c.element().getValue()</div><div class="line"></div><div class="line">    Model model = modelState.read();</div><div class="line">    Prediction previousPrediction = previousPredictionState.read();</div><div class="line">    Prediction newPrediction = model.prediction(event);</div><div class="line">    model.add(event);</div><div class="line">    modelState.write(model);</div><div class="line">    <span class="keyword">if</span> (previousPrediction == <span class="keyword">null</span> </div><div class="line">        || shouldOutputNewPrediction(previousPrediction, newPrediction)) &#123;</div><div class="line">      c.output(KV.of(userId, newPrediction));</div><div class="line">      previousPredictionState.write(newPrediction);</div><div class="line">    &#125;</div><div class="line">  &#125;</div><div class="line">&#125;;</div></pre></td></tr></table></figure>
+<ul>
+<li>这里声明了两个状态单元，<strong><em>@StateId(“model”)</em></strong>以保持用户的模型的当前状态，<strong><em>@StateId(“previousPrediction”)</em></strong>以前保存预测输出。</li>
+<li>在<strong><em>@ProcessElement</em></strong>方法中通过注释访问两个状态单元格</li>
+<li>通过<strong><em>modelState.read()</em></strong>。</li>
+<li>得出一个新的预测<strong><em>model.prediction(event)</em></strong>，并将其与输出的最后一个进行比较<strong><em>previousPredicationState.read()</em></strong></li>
+<li>通过model.update()更新模型并通过modelState.write(…)写入。</li>
+<li>如果上次输出后的预测发生了显著变化，可以通过context.output(…)写出数据并通过previousPredictionState.write(…)保存预测。这里的决定是相对于先前的预测输出，而不是最后一个计算的 - 实际上你可能在这里有一些复杂的条件。</li>
+</ul>
+<h2 id="性能考虑"><a href="#性能考虑" class="headerlink" title="性能考虑"></a>性能考虑</h2><p>在决定是否使用per-key-and-window状态，需要考虑它如何执行。你可以深入了解一个特定的跑步者如何管理状态，但有一些事情要注意的：</p>
+<ul>
+<li>per-key-and-window分区：<br>参考链接：<br><a href="https://beam.apache.org/blog/2017/02/13/stateful-processing.html" target="_blank" rel="external">https://beam.apache.org/blog/2017/02/13/stateful-processing.html</a></li>
+</ul>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+  <div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center;">
+    <div>坚持原创技术分享，您的支持将鼓励为继续创作！</div>
+    <button id="rewardButton" disable="enable" onclick="var qr = document.getElementById('QR'); if (qr.style.display === 'none') {qr.style.display='block';} else {qr.style.display='none'}">
+      <span>赏</span>
+    </button>
+    <div id="QR" style="display: none;">
+      
+        <div id="wechat" style="display: inline-block">
+          <img id="wechat_qr" src="/images/wechatpay.jpg" alt="Jonathan.Wei WeChat Pay"/>
+          <p>微信打赏</p>
+        </div>
+      
+      
+    </div>
+  </div>
+
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/apache-beam/" rel="tag"># apache beam</a>
+          
+            <a href="/tags/stateful/" rel="tag"># stateful</a>
+          
+        </div>
+      
+
+      
+        
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/06/09/apache-beam-kafka-io-sample/" rel="next" title="Apache Beam IO - KafkaIO">
+                <i class="fa fa-chevron-left"></i> Apache Beam IO - KafkaIO
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2017/06/16/create-your-pipeline/" rel="prev" title="Apache beam - 创建Pipeline">
+                Apache beam - 创建Pipeline <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+      <div id="disqus_thread">
+        <noscript>
+          Please enable JavaScript to view the
+          <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a>
+        </noscript>
+      </div>
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/headportrait.jpg"
+               alt="Jonathan.Wei" />
+          <p class="site-author-name" itemprop="name">Jonathan.Wei</p>
+           
+              <p class="site-description motion-element" itemprop="description"></p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives">
+                <span class="site-state-item-count">9</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-categories">
+              <a href="/categories/index.html">
+                <span class="site-state-item-count">3</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">7</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+          <div class="feed-link motion-element">
+            <a href="/atom.xml" rel="alternate">
+              <i class="fa fa-rss"></i>
+              RSS
+            </a>
+          </div>
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/Jonathan-Wei" target="_blank" title="GitHub">
+                  
+                    <i class="fa fa-fw fa-github"></i>
+                  
+                  GitHub
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Beam的状态处理是如何工作的？"><span class="nav-number">1.</span> <span class="nav-text">Beam的状态处理是如何工作的？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Beam-Java-SDK中的状态处理"><span class="nav-number">2.</span> <span class="nav-text">Beam Java SDK中的状态处理</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#性能考虑"><span class="nav-number">3.</span> <span class="nav-text">性能考虑</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2017</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Jonathan.Wei</span>
+</div>
+
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Mist
+  </a>
+</div>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="//cdn.jsdelivr.net/jquery/2.1.3/jquery.min.js"></script>
+
+  
+  <script type="text/javascript" src="//cdn.jsdelivr.net/fastclick/1.0.6/fastclick.min.js"></script>
+
+  
+  <script type="text/javascript" src="//cdn.jsdelivr.net/jquery.lazyload/1.9.3/jquery.lazyload.min.js"></script>
+
+  
+  <script type="text/javascript" src="//cdn.jsdelivr.net/velocity/1.2.3/velocity.min.js"></script>
+
+  
+  <script type="text/javascript" src="//cdn.jsdelivr.net/velocity/1.2.3/velocity.ui.min.js"></script>
+
+  
+  <script type="text/javascript" src="//cdn.jsdelivr.net/fancybox/2.1.5/jquery.fancybox.pack.js"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.1"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.1"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.1"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.1"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.1"></script>
+
+
+
+  
+
+
+  
+
+    
+      <script id="dsq-count-scr" src="https://weijiyonglover.disqus.com/count.js" async></script>
+    
+
+    
+      <script type="text/javascript">
+        var disqus_config = function () {
+          this.page.url = 'http://yoursite.com/2017/06/15/beam-stateful-processing/';
+          this.page.identifier = '2017/06/15/beam-stateful-processing/';
+          this.page.title = 'beam-stateful-processing';
+        };
+        var d = document, s = d.createElement('script');
+        s.src = 'https://weijiyonglover.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', '' + +new Date());
+        (d.head || d.body).appendChild(s);
+      </script>
+    
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+  <script src="https://cdn1.lncld.net/static/js/av-core-mini-0.6.1.js"></script>
+  <script>AV.initialize("3iVIndIeuvoWfV0e40zfO1aH-gzGzoHsz", "X5nEggXgDiIYp7KF9VUvDbXR");</script>
+  <script>
+    function showTime(Counter) {
+      var query = new AV.Query(Counter);
+      var entries = [];
+      var $visitors = $(".leancloud_visitors");
+
+      $visitors.each(function () {
+        entries.push( $(this).attr("id").trim() );
+      });
+
+      query.containedIn('url', entries);
+      query.find()
+        .done(function (results) {
+          var COUNT_CONTAINER_REF = '.leancloud-visitors-count';
+
+          if (results.length === 0) {
+            $visitors.find(COUNT_CONTAINER_REF).text(0);
+            return;
+          }
+
+          for (var i = 0; i < results.length; i++) {
+            var item = results[i];
+            var url = item.get('url');
+            var time = item.get('time');
+            var element = document.getElementById(url);
+
+            $(element).find(COUNT_CONTAINER_REF).text(time);
+          }
+          for(var i = 0; i < entries.length; i++) {
+            var url = entries[i];
+            var element = document.getElementById(url);
+            var countSpan = $(element).find(COUNT_CONTAINER_REF);
+            if( countSpan.text() == '') {
+              countSpan.text(0);
+            }
+          }
+        })
+        .fail(function (object, error) {
+          console.log("Error: " + error.code + " " + error.message);
+        });
+    }
+
+    function addCount(Counter) {
+      var $visitors = $(".leancloud_visitors");
+      var url = $visitors.attr('id').trim();
+      var title = $visitors.attr('data-flag-title').trim();
+      var query = new AV.Query(Counter);
+
+      query.equalTo("url", url);
+      query.find({
+        success: function(results) {
+          if (results.length > 0) {
+            var counter = results[0];
+            counter.fetchWhenSave(true);
+            counter.increment("time");
+            counter.save(null, {
+              success: function(counter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(counter.get('time'));
+              },
+              error: function(counter, error) {
+                console.log('Failed to save Visitor num, with error message: ' + error.message);
+              }
+            });
+          } else {
+            var newcounter = new Counter();
+            /* Set ACL */
+            var acl = new AV.ACL();
+            acl.setPublicReadAccess(true);
+            acl.setPublicWriteAccess(true);
+            newcounter.setACL(acl);
+            /* End Set ACL */
+            newcounter.set("title", title);
+            newcounter.set("url", url);
+            newcounter.set("time", 1);
+            newcounter.save(null, {
+              success: function(newcounter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(newcounter.get('time'));
+              },
+              error: function(newcounter, error) {
+                console.log('Failed to create');
+              }
+            });
+          }
+        },
+        error: function(error) {
+          console.log('Error:' + error.code + " " + error.message);
+        }
+      });
+    }
+
+    $(function() {
+      var Counter = AV.Object.extend("Counter");
+      if ($('.leancloud_visitors').length == 1) {
+        addCount(Counter);
+      } else if ($('.post-title-link').length > 1) {
+        showTime(Counter);
+      }
+    });
+  </script>
+
+
+
+  
+
+  
+  
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {
+          inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+          processEscapes: true,
+          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+        }
+      });
+    </script>
+
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for (i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+      });
+    </script>
+    <script type="text/javascript" src="//cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+  
+
+
+  
+
+  
+
+</body>
+</html>

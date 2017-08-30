@@ -5,7 +5,7 @@
   
 
 
-<html class="theme-next pisces use-motion" lang="zh-Hans">
+<html class="theme-next mist use-motion" lang="zh-Hans">
 <head>
   <meta charset="UTF-8"/>
 <meta http-equiv="X-UA-Compatible" content="IE=edge" />
@@ -109,7 +109,7 @@
   var NexT = window.NexT || {};
   var CONFIG = {
     root: '/',
-    scheme: 'Pisces',
+    scheme: 'Mist',
     sidebar: {"position":"left","display":"post","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false},
     fancybox: true,
     motion: true,
@@ -248,16 +248,6 @@
           </a>
         </li>
       
-        
-        <li class="menu-item menu-item-commonweal">
-          <a href="/404.html" rel="section">
-            
-              <i class="menu-item-icon fa fa-fw fa-heartbeat"></i> <br />
-            
-            公益404
-          </a>
-        </li>
-      
 
       
     </ul>
@@ -277,6 +267,500 @@
           <div id="content" class="content">
             
   <section id="posts" class="posts-expand">
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/06/16/design-your-pipeline/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Jonathan.Wei">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/headportrait.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Jonathan.Wei's Notes">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2017/06/16/design-your-pipeline/" itemprop="url">Apache beam - Pipeline设计</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-06-16T17:30:12+08:00">
+                2017-06-16
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/apache-beam/" itemprop="url" rel="index">
+                    <span itemprop="name">apache beam</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2017/06/16/design-your-pipeline/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count disqus-comment-count"
+                        data-disqus-identifier="2017/06/16/design-your-pipeline/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+             <span id="/2017/06/16/design-your-pipeline/" class="leancloud_visitors" data-flag-title="Apache beam - Pipeline设计">
+               <span class="post-meta-divider">|</span>
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               
+                 <span class="post-meta-item-text">阅读次数 </span>
+               
+                 <span class="leancloud-visitors-count"></span>
+             </span>
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          <h2 id="设计Pipeline时需要考虑什么？"><a href="#设计Pipeline时需要考虑什么？" class="headerlink" title="设计Pipeline时需要考虑什么？"></a>设计Pipeline时需要考虑什么？</h2><p>当我们设计我们的beam pipeline时，需要考虑的一些基础问题：</p>
+<ul>
+<li>你的输入数据存储在哪里？这将决定<strong><em>Read</em></strong>在pipeline开始时需要使用哪些类型的转换</li>
+<li>你的数据是怎么样的？</li>
+<li>你想用数据做什么？</li>
+<li>你的输出数据是什么样的，应该存储到哪里？这个决定<strong><em>write</em></strong>在pipeline末端使用哪些类型的transforms</li>
+</ul>
+<p>##一条基本的Pipeline<br>最简单的Pipeline体现为一个线性的操作流程。如下图<br><img src="/images/design-your-pipeline-linear.png" alt="img"><br>
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2017/06/16/design-your-pipeline/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/06/16/create-your-pipeline/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Jonathan.Wei">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/headportrait.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Jonathan.Wei's Notes">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2017/06/16/create-your-pipeline/" itemprop="url">Apache beam - 创建Pipeline</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-06-16T17:29:49+08:00">
+                2017-06-16
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/apache-beam/" itemprop="url" rel="index">
+                    <span itemprop="name">apache beam</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2017/06/16/create-your-pipeline/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count disqus-comment-count"
+                        data-disqus-identifier="2017/06/16/create-your-pipeline/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+             <span id="/2017/06/16/create-your-pipeline/" class="leancloud_visitors" data-flag-title="Apache beam - 创建Pipeline">
+               <span class="post-meta-divider">|</span>
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               
+                 <span class="post-meta-item-text">阅读次数 </span>
+               
+                 <span class="leancloud-visitors-count"></span>
+             </span>
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          <p>Beam程序从头到尾表达了一个数据处理流程。这里介绍在Beam SDK中使用类构建管道的机制。要使用Beam SDK中的类构建管道，您的程序将需要执行以下一般步骤：</p>
+<ul>
+<li>创建一个<strong><em>Pipeline</em></strong>对象</li>
+<li>使用<strong><em>Read</em></strong>或者<strong><em>Create</em></strong>转换去为管道数据创建一个或多个<strong><em>PCollections</em></strong></li>
+<li>应用Transforms到每个PCollection.Transforms可以对PCollection中的每个元素进行修改，过滤，分组，解析以及其他处理</li>
+<li>最后使用Write或者其他输出方式，完成PCollection的转换</li>
+<li>运行Pipeline
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2017/06/16/create-your-pipeline/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/06/15/beam-stateful-processing/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Jonathan.Wei">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/headportrait.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Jonathan.Wei's Notes">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2017/06/15/beam-stateful-processing/" itemprop="url">beam-stateful-processing</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-06-15T16:43:33+08:00">
+                2017-06-15
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/apache-beam/" itemprop="url" rel="index">
+                    <span itemprop="name">apache beam</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2017/06/15/beam-stateful-processing/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count disqus-comment-count"
+                        data-disqus-identifier="2017/06/15/beam-stateful-processing/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+             <span id="/2017/06/15/beam-stateful-processing/" class="leancloud_visitors" data-flag-title="beam-stateful-processing">
+               <span class="post-meta-divider">|</span>
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               
+                 <span class="post-meta-item-text">阅读次数 </span>
+               
+                 <span class="leancloud-visitors-count"></span>
+             </span>
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          <p>Apache beam让我们可以使用可移植高级的pipelines来处理无界限的、无序的、全局性的数据。有状态数据处理是apache beam提供的一个新的特性，扩展了beam的功能，同时也解锁了新的使用场景。</p>
+<p>首先，看下下面这张图：在beam中，一个大数据处理流水<strong><em>Pipelines</em></strong>是一个从<strong><em>PCollection</em></strong>获取数据，通过<strong><em>PTransforms</em></strong>进行数据处理的有向无环图。<br><img src="/images/pipeline.png" alt="img"><br>
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2017/06/15/beam-stateful-processing/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
     
       
 
@@ -399,7 +883,7 @@
       
         
           <p>之前在网上看到这样一个例子<br><a href="https://github.com/wtanaka/streaming/blob/d2e63184f604ea42d9711dd59951af3f3f4200f9/beam/src/main/java/com/wtanaka/streaming/beam/KafkaToKafka.java" target="_blank" rel="external">https://github.com/wtanaka/streaming/blob/d2e63184f604ea42d9711dd59951af3f3f4200f9/beam/src/main/java/com/wtanaka/streaming/beam/KafkaToKafka.java</a><br>但是从代码的设计上看对flink kafka存在依赖，而这样编写代码我觉得违背了apache beam的初衷，下面我自己写了一个很简单的例子，从kafka input-topic读取数据，写入kafka output-topic。<br>这里我只是做一个简单测试，所以使用的都是单机模式的kafka、zookeeper和flink</p>
-<h2 id="公共参数"><a href="#公共参数" class="headerlink" title="公共参数"></a>公共参数</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line">private static final long WINDOW_SIZE = 10;</div><div class="line">// Default window duration in seconds</div><div class="line">private static final long SLIDE_SIZE = 5;</div><div class="line">// Default window slide in seconds</div><div class="line">private static final String KAFKA_TOPIC = &quot;input-topic&quot;;</div><div class="line">private static final String KAFKA_OUTPUT_TOPIC = &quot;output-topic&quot;;</div><div class="line">private static final String KAFKA_BROKER = &quot;localhost:9092&quot;;</div><div class="line">// Default kafka broker to contact</div><div class="line">private static final String GROUP_ID = &quot;beamGroup&quot;; // Default groupId</div><div class="line">private static final String ZOOKEEPER = &quot;localhost:2181&quot;;</div></pre></td></tr></table></figure>
+<h2 id="公共参数"><a href="#公共参数" class="headerlink" title="公共参数"></a>公共参数</h2><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="keyword">long</span> WINDOW_SIZE = <span class="number">10</span>;</div><div class="line"><span class="comment">// Default window duration in seconds</span></div><div class="line"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="keyword">long</span> SLIDE_SIZE = <span class="number">5</span>;</div><div class="line"><span class="comment">// Default window slide in seconds</span></div><div class="line"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> String KAFKA_TOPIC = <span class="string">"input-topic"</span>;</div><div class="line"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> String KAFKA_OUTPUT_TOPIC = <span class="string">"output-topic"</span>;</div><div class="line"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> String KAFKA_BROKER = <span class="string">"localhost:9092"</span>;</div><div class="line"><span class="comment">// Default kafka broker to contact</span></div><div class="line"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> String GROUP_ID = <span class="string">"beamGroup"</span>; <span class="comment">// Default groupId</span></div><div class="line"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> String ZOOKEEPER = <span class="string">"localhost:2181"</span>;</div></pre></td></tr></table></figure>
           <!--noindex-->
           <div class="post-button text-center">
             <a class="btn" href="/2017/06/09/apache-beam-kafka-io-sample/#more" rel="contents">
@@ -559,7 +1043,7 @@
 
       
         
-          <h2 id="使用Flink-Runner先决条件及步骤"><a href="#使用Flink-Runner先决条件及步骤" class="headerlink" title="使用Flink Runner先决条件及步骤"></a>使用Flink Runner先决条件及步骤</h2><h3 id="检查apache-beam对应版本所需要的flink版本"><a href="#检查apache-beam对应版本所需要的flink版本" class="headerlink" title="检查apache beam对应版本所需要的flink版本"></a>检查apache beam对应版本所需要的flink版本</h3><p>方式一：(推荐)<br>github上查找beam项目，找到指定版本的flink runner的pom.xml文件，检查flink.version版本<br><a href="https://github.com/apache/beam/blob/v2.0.0/runners/flink/pom.xml" target="_blank" rel="external">https://github.com/apache/beam/blob/v2.0.0/runners/flink/pom.xml</a><br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">&lt;properties&gt;</div><div class="line">    &lt;flink.version&gt;1.2.1&lt;/flink.version&gt;</div><div class="line">&lt;/properties&gt;</div></pre></td></tr></table></figure></p>
+          <h2 id="使用Flink-Runner先决条件及步骤"><a href="#使用Flink-Runner先决条件及步骤" class="headerlink" title="使用Flink Runner先决条件及步骤"></a>使用Flink Runner先决条件及步骤</h2><h3 id="检查apache-beam对应版本所需要的flink版本"><a href="#检查apache-beam对应版本所需要的flink版本" class="headerlink" title="检查apache beam对应版本所需要的flink版本"></a>检查apache beam对应版本所需要的flink版本</h3><p>方式一：(推荐)<br>github上查找beam项目，找到指定版本的flink runner的pom.xml文件，检查flink.version版本<br><a href="https://github.com/apache/beam/blob/v2.0.0/runners/flink/pom.xml" target="_blank" rel="external">https://github.com/apache/beam/blob/v2.0.0/runners/flink/pom.xml</a><br><figure class="highlight xml"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="tag">&lt;<span class="name">properties</span>&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="name">flink.version</span>&gt;</span>1.2.1<span class="tag">&lt;/<span class="name">flink.version</span>&gt;</span></div><div class="line"><span class="tag">&lt;/<span class="name">properties</span>&gt;</span></div></pre></td></tr></table></figure></p>
 <p>方式二：<br>官方所说的通过mvn命令查询支持的flink版本<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">$ mvn dependency:tree -Pflink-runner |grep flink</div><div class="line">...</div><div class="line">[INFO] |  +- org.apache.flink:flink-streaming-java_2.10:jar:1.1.2:runtime</div><div class="line">...</div></pre></td></tr></table></figure></p>
           <!--noindex-->
           <div class="post-button text-center">
@@ -1045,8 +1529,8 @@
 
       
         
-          <h2 id="Maven-Search-Repository"><a href="#Maven-Search-Repository" class="headerlink" title="Maven Search Repository"></a>Maven Search Repository</h2><p>一直以来都是以maven来开发项目，这里提供两个maven查询库地址。<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ http://search.maven.org</div></pre></td></tr></table></figure></p>
-<p>More info: <a href="http://search.maven.org" target="_blank" rel="external">Link</a><br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ http://mvnrepository.com</div></pre></td></tr></table></figure></p>
+          <h2 id="Maven-Search-Repository"><a href="#Maven-Search-Repository" class="headerlink" title="Maven Search Repository"></a>Maven Search Repository</h2><p>一直以来都是以maven来开发项目，这里提供两个maven查询库地址。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ http://search.maven.org</div></pre></td></tr></table></figure></p>
+<p>More info: <a href="http://search.maven.org" target="_blank" rel="external">Link</a><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ http://mvnrepository.com</div></pre></td></tr></table></figure></p>
 <p>More info: <a href="http://mvnrepository.com" target="_blank" rel="external">Link</a><br>
           <!--noindex-->
           <div class="post-button text-center">
@@ -1294,7 +1778,7 @@
           
             <div class="site-state-item site-state-posts">
               <a href="/archives">
-                <span class="site-state-item-count">6</span>
+                <span class="site-state-item-count">9</span>
                 <span class="site-state-item-name">日志</span>
               </a>
             </div>
@@ -1316,7 +1800,7 @@
             
             <div class="site-state-item site-state-tags">
               <a href="/tags/index.html">
-                <span class="site-state-item-count">6</span>
+                <span class="site-state-item-count">7</span>
                 <span class="site-state-item-name">标签</span>
               </a>
             </div>
@@ -1391,7 +1875,7 @@
 <div class="theme-info">
   主题 -
   <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
-    NexT.Pisces
+    NexT.Mist
   </a>
 </div>
 
@@ -1470,13 +1954,6 @@
 
   
   
-
-
-  <script type="text/javascript" src="/js/src/affix.js?v=5.1.1"></script>
-
-  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.1"></script>
-
-
 
   
 
