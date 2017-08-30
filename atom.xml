@@ -112,7 +112,7 @@
     <link href="http://yoursite.com/2017/06/16/design-your-pipeline/"/>
     <id>http://yoursite.com/2017/06/16/design-your-pipeline/</id>
     <published>2017-06-16T09:30:12.000Z</published>
-    <updated>2017-08-30T08:05:19.000Z</updated>
+    <updated>2017-08-30T09:19:49.000Z</updated>
     
     <content type="html"><![CDATA[<h2 id="设计Pipeline时需要考虑什么？"><a href="#设计Pipeline时需要考虑什么？" class="headerlink" title="设计Pipeline时需要考虑什么？"></a>设计Pipeline时需要考虑什么？</h2><p>当我们设计我们的beam pipeline时，需要考虑的一些基础问题：</p>
 <ul>
@@ -121,7 +121,7 @@
 <li>你想用数据做什么？</li>
 <li>你的输出数据是什么样的，应该存储到哪里？这个决定<strong><em>write</em></strong>在pipeline末端使用哪些类型的transforms</li>
 </ul>
-<p>##一条基本的Pipeline<br>最简单的Pipeline体现为一个线性的操作流程。如下图<br><img src="/images/design-your-pipeline-linear.png" alt="img"><br><a id="more"></a><br>但是，在实际场景中，Pipeline比基本的Pipeline要复杂的多。Pipeline代表一个有步骤的有向无环图。它可能有多个输入源，多个输出接收器，并且其操作PTransforms可以读取和输出多个PCollections。</p>
+<h2 id="一条基本的Pipeline"><a href="#一条基本的Pipeline" class="headerlink" title="一条基本的Pipeline"></a>一条基本的Pipeline</h2><p>最简单的Pipeline体现为一个线性的操作流程。如下图<br><img src="/images/design-your-pipeline-linear.png" alt="img"><br><a id="more"></a><br>但是，在实际场景中，Pipeline比基本的Pipeline要复杂的多。Pipeline代表一个有步骤的有向无环图。它可能有多个输入源，多个输出接收器，并且其操作PTransforms可以读取和输出多个PCollections。</p>
 <h2 id="分支PCollections"><a href="#分支PCollections" class="headerlink" title="分支PCollections"></a>分支PCollections</h2><div class="note info"><p>重要的是要了解Transforms不消耗PCollections，相反，他们认为每一个独立的元素都是一个PCollection，且创建一个新的PCollection用于输出。这样，我们就可以对同一个PCollection中的不同元素做不同的操作。</p>
 </div>
 <h3 id="多个PTransforms处理相同的PCollections"><a href="#多个PTransforms处理相同的PCollections" class="headerlink" title="多个PTransforms处理相同的PCollections"></a>多个PTransforms处理相同的PCollections</h3><p>可以使用相同的PCollection输入用于多个转换，而不消耗输入或更改它。<br>图中所示的流水线从单个数据库源读取输入数据，并创建一个PCollection表行。然后，Pipeline将多个transforms应用到同一个PCollection。转换a读取所有以A字母开头的PCollection，转换b读取所有以B开头的PCollection。转换a与转换b的输入是同一个PCollection<br><img src="/images/design-your-pipeline-multiple-pcollections.png" alt="img"><br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div></pre></td><td class="code"><pre><div class="line">PCollection&lt;String&gt; dbRowCollection = ...;</div><div class="line"></div><div class="line">PCollection&lt;String&gt; aCollection = dbRowCollection.apply(<span class="string">"aTrans"</span>, ParDo.of(<span class="keyword">new</span> DoFn&lt;String, String&gt;()&#123;</div><div class="line">  <span class="meta">@ProcessElement</span></div><div class="line">  <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">processElement</span><span class="params">(ProcessContext c)</span> </span>&#123;</div><div class="line">    <span class="keyword">if</span>(c.element().startsWith(<span class="string">"A"</span>))&#123;</div><div class="line">      c.output(c.element());</div><div class="line">    &#125;</div><div class="line">  &#125;</div><div class="line">&#125;));</div><div class="line"></div><div class="line">PCollection&lt;String&gt; bCollection = dbRowCollection.apply(<span class="string">"bTrans"</span>, ParDo.of(<span class="keyword">new</span> DoFn&lt;String, String&gt;()&#123;</div><div class="line">  <span class="meta">@ProcessElement</span></div><div class="line">  <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">processElement</span><span class="params">(ProcessContext c)</span> </span>&#123;</div><div class="line">    <span class="keyword">if</span>(c.element().startsWith(<span class="string">"B"</span>))&#123;</div><div class="line">      c.output(c.element());</div><div class="line">    &#125;</div><div class="line">  &#125;</div><div class="line">&#125;));</div></pre></td></tr></table></figure></p>
@@ -149,7 +149,7 @@
 &lt;li&gt;你想用数据做什么？&lt;/li&gt;
 &lt;li&gt;你的输出数据是什么样的，应该存储到哪里？这个决定&lt;strong&gt;&lt;em&gt;write&lt;/em&gt;&lt;/strong&gt;在pipeline末端使用哪些类型的transforms&lt;/li&gt;
 &lt;/ul&gt;
-&lt;p&gt;##一条基本的Pipeline&lt;br&gt;最简单的Pipeline体现为一个线性的操作流程。如下图&lt;br&gt;&lt;img src=&quot;/images/design-your-pipeline-linear.png&quot; alt=&quot;img&quot;&gt;&lt;br&gt;
+&lt;h2 id=&quot;一条基本的Pipeline&quot;&gt;&lt;a href=&quot;#一条基本的Pipeline&quot; class=&quot;headerlink&quot; title=&quot;一条基本的Pipeline&quot;&gt;&lt;/a&gt;一条基本的Pipeline&lt;/h2&gt;&lt;p&gt;最简单的Pipeline体现为一个线性的操作流程。如下图&lt;br&gt;&lt;img src=&quot;/images/design-your-pipeline-linear.png&quot; alt=&quot;img&quot;&gt;&lt;br&gt;
     
     </summary>
     
