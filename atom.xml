@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://yoursite.com/"/>
-  <updated>2018-07-25T04:31:00.729Z</updated>
+  <updated>2018-07-25T07:27:02.208Z</updated>
   <id>http://yoursite.com/</id>
   
   <author>
@@ -20,7 +20,7 @@
     <link href="http://yoursite.com/2018/07/25/carbondata-1-4-0-spark-2-2-1-install/"/>
     <id>http://yoursite.com/2018/07/25/carbondata-1-4-0-spark-2-2-1-install/</id>
     <published>2018-07-25T02:52:59.000Z</published>
-    <updated>2018-07-25T04:31:00.729Z</updated>
+    <updated>2018-07-25T07:27:02.208Z</updated>
     
     <content type="html"><![CDATA[<p>由于项目需要，近期一直在研究华为开源的carbondata项目，目前carbondata已经成为apache的顶级项目，项目活跃程度也比较高。</p>
 <h1 id="Carbondata介绍"><a href="#Carbondata介绍" class="headerlink" title="Carbondata介绍"></a>Carbondata介绍</h1><p>纵观目前的大数据生态圈，针对于ad-hoc查询并没有什么好的解决方案，且查询效率不高。Carbondata针对ad-hoc给出了解决方案，但是目前版本这个方案并不完善。为什么说并不完善，后续会给大家解答，我们先来说下carbondata的优点</p>
@@ -46,9 +46,9 @@
 </ul>
 <h2 id="部署"><a href="#部署" class="headerlink" title="部署"></a>部署</h2><ul>
 <li>Hadoop Native格式：与大数据生态无缝集成，利用已有hadoop集群资产</li>
-<li>与Spark2.x版本集成</li>
+<li>与Spark2.x版本集成<a id="more"></a>
+carbondata 1.4.0新增了挺多强大的功能，主要关注的点是在datamap上，不过目前datamap对于单表的支持是比较好的，但是对于多表join的datamap支持还不够完善，还是有蛮多问题的。</li>
 </ul>
-<p>carbondata 1.4.0新增了挺多强大的功能，主要关注的点是在datamap上，不过目前datamap对于单表的支持是比较好的，但是对于多表join的datamap支持还不够完善，还是有蛮多问题的。</p>
 <p>单表的datamap目前包括：preaggregate、timeseries、bloomfilter、lucene</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line">#创建datamap</div><div class="line">CREATE DATAMAP [IF NOT EXISTS] $&#123;dataMapName&#125; </div><div class="line">    ON TABLE &apos;$&#123;tableName&#125;&apos;</div><div class="line">    USING &quot;datamap_provider&quot;   #preaggregate,timeseries,bloomfilter,lucene</div><div class="line">    DMPROPERTIES (&apos;key&apos;=&apos;value&apos;, ...)</div><div class="line">    AS</div><div class="line">        SELECT statement</div><div class="line"></div><div class="line">#删除datamap</div><div class="line">DROP DATAMAP $&#123;dataMapName&#125; ON TABLE $&#123;tableName&#125;</div><div class="line"></div><div class="line">#查询datamap</div><div class="line">SHOW DATAMAP ON TABLE &apos;$&#123;tableName&#125;&apos;</div></pre></td></tr></table></figure>
 <p>多表datamap目前1.4.0官方文档并没有给出，我是通过carbondata jira的问题找到其创建方式的，多表的datamap预计在1.5.0版本才能使用，目前问题较多，这里暂时不建议使用，等1.5.0版本出来之后再试试看。1.5.0版本官方等版本计划是8-9月份完成。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">CREATE DATAMAP [IF NOT EXISTS] $&#123;dataMapName&#125; </div><div class="line">    USING &apos;mv&apos; </div><div class="line">    AS</div><div class="line">        SELECT statement</div></pre></td></tr></table></figure></p>
@@ -75,7 +75,30 @@
     <summary type="html">
     
       &lt;p&gt;由于项目需要，近期一直在研究华为开源的carbondata项目，目前carbondata已经成为apache的顶级项目，项目活跃程度也比较高。&lt;/p&gt;
-&lt;h1 id=&quot;Carbondata介绍&quot;&gt;&lt;a href=&quot;#Carbondata介绍&quot; class=&quot;headerli
+&lt;h1 id=&quot;Carbondata介绍&quot;&gt;&lt;a href=&quot;#Carbondata介绍&quot; class=&quot;headerlink&quot; title=&quot;Carbondata介绍&quot;&gt;&lt;/a&gt;Carbondata介绍&lt;/h1&gt;&lt;p&gt;纵观目前的大数据生态圈，针对于ad-hoc查询并没有什么好的解决方案，且查询效率不高。Carbondata针对ad-hoc给出了解决方案，但是目前版本这个方案并不完善。为什么说并不完善，后续会给大家解答，我们先来说下carbondata的优点&lt;/p&gt;
+&lt;h2 id=&quot;查询&quot;&gt;&lt;a href=&quot;#查询&quot; class=&quot;headerlink&quot; title=&quot;查询&quot;&gt;&lt;/a&gt;查询&lt;/h2&gt;&lt;ul&gt;
+&lt;li&gt;两级索引，减少IO：适合ad-hoc查询，任意维度组合查询场景&lt;ul&gt;
+&lt;li&gt;第一级：文件索引，用于过滤hdfs block，避免扫描不必要的文件&lt;/li&gt;
+&lt;li&gt;第二级：Blocklet索引，用于过滤文件内部的Blocklet，避免骚烤不必要的Blocklet&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;延迟解码，向量化处理：适合全表扫描、汇总分析场景&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&quot;数据管理&quot;&gt;&lt;a href=&quot;#数据管理&quot; class=&quot;headerlink&quot; title=&quot;数据管理&quot;&gt;&lt;/a&gt;数据管理&lt;/h2&gt;&lt;ul&gt;
+&lt;li&gt;数据增量入库，多级排序可调：有用户权衡入库时间和查询性能&lt;ul&gt;
+&lt;li&gt;字典编码配置（Dictionary Encoding Configuration）&lt;/li&gt;
+&lt;li&gt;反向索引配置（Inverted Index Configuration）&lt;/li&gt;
+&lt;li&gt;排序列配置（Sort Columns Configuration）&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;增量更新，批量合并：支持快速更新事实表或维表，闲时做Compaction合并&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&quot;大规模&quot;&gt;&lt;a href=&quot;#大规模&quot; class=&quot;headerlink&quot; title=&quot;大规模&quot;&gt;&lt;/a&gt;大规模&lt;/h2&gt;&lt;ul&gt;
+&lt;li&gt;计算与存储分离：支持从GB到PB大规模数据，万亿数据秒级响应&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&quot;部署&quot;&gt;&lt;a href=&quot;#部署&quot; class=&quot;headerlink&quot; title=&quot;部署&quot;&gt;&lt;/a&gt;部署&lt;/h2&gt;&lt;ul&gt;
+&lt;li&gt;Hadoop Native格式：与大数据生态无缝集成，利用已有hadoop集群资产&lt;/li&gt;
+&lt;li&gt;与Spark2.x版本集成
     
     </summary>
     
